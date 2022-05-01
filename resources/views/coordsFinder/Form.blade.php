@@ -49,15 +49,13 @@
 			height: 25px;
 			text-align: center;
 			line-height: 28px;
-			transition-duration: 0.4s;
+			transition-duration: 1s;
 			transform: scale(0);
 		}
 
 		label img {
-			height: 100px;
-			width: 100px;
-			transition-duration: 0.2s;
-			transform-origin: 50% 50%;
+			height: 150px;
+			width: 150px;
 		}
 
 		:checked + label {
@@ -66,12 +64,12 @@
 
 		:checked + label:before {
 			content: "✓";
-			background-color: grey;
+			background-color: lightgreen;
+			color: black;
 			transform: scale(1);
 		}
 
 		:checked + label img {
-			transform: scale(0.9);
 			box-shadow: 0 0 5px #333;
 			z-index: -1;
 		}
@@ -80,13 +78,26 @@
 	<title>AstroNewmy Coords Finder</title>
 @endsection
 
+@section('header')
+	<a href="home" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+		<img src="/imagenes/iconos/mainLogo.PNG" alt="Main logo website" height="60px">
+	</a>
+	<ul class="nav nav-pills">
+		<li class="nav-item"><a href="home" class="nav-link " aria-current="page">Home</a></li>
+		<li class="nav-item"><a href="coordenates_finder_form" class="nav-link active">Coords Finder</a></li>
+		<li class="nav-item"><a href="#" class="nav-link">Articles</a></li>
+		<li class="nav-item"><a href="#" class="nav-link">About</a></li>
+	</ul>
+@endsection
+
 @section('section')
-	<form>
+	<form method="post" action="{{ route('coords.display') }}">
+	@csrf
 		<div class="row mb-4">
 			<div class="col">
 				<div class="form-outline">
 					<label for="exampleFormControlSelect1">Country</label>
-					<select class="form-control" id="countrySelector">
+					<select class="form-control" id="countrySelector" name="country">
 						<option>Select a Country</option>
 					</select>
 				</div>
@@ -94,7 +105,7 @@
 			<div class="col">
 				<div class="form-outline">
 					<label for="exampleFormControlSelect1">City</label>
-					<select class="form-control" id="citySelector">
+					<select class="form-control" id="citySelector" name="city">
 						<option>Select a City</option>
 					</select>
 				</div>
@@ -102,11 +113,11 @@
 		</div>
 
 		<div class ="row mb-4">  
-			<div class ='col-sm-6'>  
+			<div class ='col-sm-4'>  
 				<div class ="form-group">  
-					<label>Date and Hour to start the observation</label>
-					<div class ='input-group date' id='datetimepicker1'>  
-						<input type ='text' class="form-control" name="dateTimeStart"/>  
+					<label>Date of the observation</label>
+					<div class ='input-group date' id='datepicker'>  
+						<input type ='text' class="form-control" name="datepick"/>  
 						<span class ="input-group-addon">  
 							<span class ="glyphicon glyphicon-calendar"></span>  
 						</span>  
@@ -114,10 +125,22 @@
 				</div>  
 			</div>  
 
-			<div class ='col-sm-6'>  
+			<div class ='col-sm-4'>  
 				<div class ="form-group">  
-					<label>Hour to end the observation</label>
-					<div class = 'input-group date' id='datetimepicker'>  
+					<label>Hour to Start the observation</label>
+					<div class = 'input-group date' id='hourpickerStart'>  
+						<input type = 'text' class="form-control" name="timeStart"/>  
+						<span class = "input-group-addon">  
+							<span class = "glyphicon glyphicon-time"></span>  
+						</span>  
+					</div>  
+				</div>  
+			</div>  
+
+			<div class ='col-sm-4'>  
+				<div class ="form-group">  
+					<label>Hour to End the observation</label>
+					<div class = 'input-group date' id='hourpickerEnd'>  
 						<input type = 'text' class="form-control" name="timeEnd"/>  
 						<span class = "input-group-addon">  
 							<span class = "glyphicon glyphicon-time"></span>  
@@ -128,12 +151,15 @@
 
 			<script type = "text/javascript">  
 				$(function () {  
-					$('#datetimepicker').datetimepicker({  
+					$('#datepicker').datetimepicker({
+						format: 'L'
+					});
+					$('#hourpickerStart').datetimepicker({  
 						format: 'LT',
-					});  
-				});  
-				$(function() {  
-					$('#datetimepicker1').datetimepicker();  
+					}); 
+					$('#hourpickerEnd').datetimepicker({  
+						format: 'LT',
+					}); 
 				});  
 			</script>  
 				
@@ -228,8 +254,4 @@
 		});
 	}
 
-	function formValidation(){
-
-		//Add to the form the celestial object to check coordenates.
-	}
 </script>

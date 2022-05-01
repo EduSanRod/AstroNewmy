@@ -25,6 +25,6 @@ class Article extends Model
     /**
      * @var array
      */
-    protected $fillable = ['title', 'description', 'image', 'author', 'source', 'celestial_object_id'];
+    protected $fillable = ['title', 'slug', 'description', 'image', 'author', 'source', 'celestial_object_id'];
 
 }

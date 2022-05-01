@@ -24,6 +24,6 @@ class CelestialObjectImages extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'price', 'image', 'external_link', 'click_count'];
+    protected $fillable = ['name', 'price', 'description', 'image', 'external_link', 'click_count'];
 
 }

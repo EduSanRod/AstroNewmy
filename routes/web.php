@@ -15,4 +15,6 @@ use App\Http\Controllers\CoordsFinder\CoordsFinderController;
 |
 */
 
-Route::get("/coordenates_finder_form", [CoordsFinderController::class, 'displayForm']);
+Route::get("/coordenates_finder_form", [CoordsFinderController::class, 'displayForm'])->name('coords.form');
+Route::post("/coordenates_finder_result", [CoordsFinderController::class, 'displayCoordenates'])->name('coords.display');
+Route::get("/home", [App\Http\Controllers\Home\HomeController::class, 'displayHome'])->name('home.display');

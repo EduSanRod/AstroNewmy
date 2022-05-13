@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Models\CelestialObject;
+use App\Http\Controllers\ApiRelated\ApiController;
 
 class CoordsFinderController extends Controller
 {
@@ -32,6 +33,14 @@ class CoordsFinderController extends Controller
         $timeStart = $request->input('timeStart');
         $timeEnd = $request->input('timeEnd');
 
+        $apiQuery = new ApiController();
+
+        $data = $apiQuery->getObserverCoords($city);
+
+        $latitude = $data->latitude;
+        $longitude = $data->longitude;
+
+
         $celestialObjects = array();
 
         $celestialObjectsData = $this->getAllCelestialObjects();
@@ -49,6 +58,8 @@ class CoordsFinderController extends Controller
             "timeStart" => $timeStart,
             "timeEnd" => $timeEnd,
             "celestialObjects" => $celestialObjects,
+            "latitude" => $latitude,
+            "longitude" => $longitude,
         ]);
     }
 

@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\ApiRelated;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class ApiController extends Controller
 {
@@ -17,5 +18,15 @@ class ApiController extends Controller
         $decodedData = json_decode($data);
         
         return $decodedData;
+    }
+
+    public function getObserverCoords($city){
+
+        $data=file_get_contents("http://localhost:8188/cgi-bin/ObserverCoords.py?city='". $city. "'");
+
+        $decodedData = json_decode($data);
+
+        return $decodedData;
+
     }
 }

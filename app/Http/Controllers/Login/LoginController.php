@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Login;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
@@ -26,6 +28,22 @@ class LoginController extends Controller
         }
 
         return redirect()->route('home.display');
+    }
+
+    public function createLoginForm(){
+
+        return view("login/create");
+    }
+
+    public function createLogin(Request $request){
+
+        $username = $request->input('username');
+        $email = $request->input('email');
+        $password = $request->input('password');
+
+        DB::table('users')->insert(['name'=> $username,'email'=> $email,'password'=>Hash::make($password)]);
+
+        return redirect()->route('login.index');
     }
 
     

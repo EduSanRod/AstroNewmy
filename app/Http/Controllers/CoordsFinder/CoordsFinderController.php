@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 
 use App\Models\CelestialObject;
 use App\Http\Controllers\ApiRelated\ApiController;
+use DateTime;
 
 class CoordsFinderController extends Controller
 {
@@ -51,6 +52,28 @@ class CoordsFinderController extends Controller
             }
         }
 
+        $datetmp = DateTime::createFromFormat('m/d/Y', $datepick);
+        $date = $datetmp->format('Y-m-d');
+
+        $hourStart = date("H:i", strtotime($timeStart));
+        $hourEnd = date("H:i", strtotime($timeEnd));
+
+        $datehourStart = strval($date. " ". $hourStart);
+        $datehourEnd = strval($date. " ". $hourEnd);
+
+        $resultData = array();
+        foreach($celestialObjects as $celestialObject){
+            $planetData = array();
+            $planetData[] = $apiQuery->GetAltitudeAndAzimuth($celestialObject, $latitude, $longitude, $datehourStart);
+            $planetData[] = $apiQuery->GetAltitudeAndAzimuth($celestialObject, $latitude, $longitude, $datehourEnd);
+
+            $resultData[] = $planetData;
+        }
+        /*
+        echo "<pre>";
+        var_dump($resultData);
+        echo "</pre>";
+        */
         return view("coordsFinder/displayCoords", [
             "country" => $country,
             "city" => $city,
@@ -60,6 +83,7 @@ class CoordsFinderController extends Controller
             "celestialObjects" => $celestialObjects,
             "latitude" => $latitude,
             "longitude" => $longitude,
+            "resultData" => $resultData,
         ]);
     }
 

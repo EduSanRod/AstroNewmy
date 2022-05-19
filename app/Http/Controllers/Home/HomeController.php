@@ -30,7 +30,7 @@ class HomeController extends Controller
 
     public function getLastThreeArticles(){
         
-        $articles = Article::select("article.id as article_id", "article.title as article_title", "article.slug as article_slug", "article.description as article_description", "article.image as article_image", "article.author as article_author", "article.source as article_source", "article.celestial_object_id  as article_celestial_object_id ")
+        $articles = Article::select("article.id as article_id", "article.title as article_title", "article.slug as article_slug", "article.description as article_description", "article.image as article_image", "article.user_id as article_user_id", "article.source as article_source", "article.celestial_object_id  as article_celestial_object_id ")
         ->orderBy('id', 'DESC')
         ->limit(3)
         ->get();

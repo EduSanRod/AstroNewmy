@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $title
  * @property string $description
  * @property string $image
- * @property string $author
+ * @property int $user_id
  * @property string $source
  * @property int $celestial_object_id
  */
@@ -25,6 +25,6 @@ class Article extends Model
     /**
      * @var array
      */
-    protected $fillable = ['title', 'slug', 'description', 'image', 'author', 'source', 'celestial_object_id'];
+    protected $fillable = ['title', 'slug', 'description', 'image', 'user_id', 'source', 'celestial_object_id'];
 
 }

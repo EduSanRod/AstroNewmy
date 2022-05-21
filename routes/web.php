@@ -25,7 +25,14 @@ Route::get("/login", [LoginController::class, 'displayLogin'])->name('login.inde
 Route::get('/login-auth', [AuthController::class, 'authenticate'])->name('login.authenticate');
 Route::get('/login-out', [LoginController::class, 'logout'])->name('login.logout');
 Route::get('/register', [LoginController::class, 'createLoginForm'])->name('login.create-form');
-Route::get('/login-create', [LoginController::class, 'createLogin'])->name('login.create');
+Route::post('/login-create', [LoginController::class, 'createLogin'])->name('login.create');
+
+//----------- User Routes ----------//
+Route::get('/user/settings', [LoginController::class, 'showUserSetting'])->name('user.setting');
+Route::post('/user/update', [LoginController::class, 'userUpdate'])->name('user.update');
+Route::get('/user/delete', [LoginController::class, 'userDelete'])->name('user.delete');
+Route::get('/user/profile/articles', [LoginController::class, 'showUserArticles'])->name('user.articles');
+Route::get('/user/profile/comments', [LoginController::class, 'showUserComments'])->name('user.comments');
 
 //----------- Home Routes ----------//
 Route::get("/home", [HomeController::class, 'displayHome'])->name('home.display');

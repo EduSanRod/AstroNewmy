@@ -34,16 +34,16 @@
 			<li class="nav-item"><a href="/article" class="nav-link {{ Request::routeIs('article.*') ? 'active' : '' }}" aria-current="page">Articles</a></li>
 			<li class=" nav-item"><a href="/about" class="nav-link {{ Request::routeIs('about.*') ? 'active' : '' }}" aria-current="page">About</a></li>
 			@if (Auth::guest())
-			<li class="active nav-item "><a href="/login" class="nav-link active" aria-current="page">Login</a></li>
+				<li class="active nav-item "><a href="/login" class="nav-link active" aria-current="page">Login</a></li>
 			@else
-			<div class="dropdown ">
-				<button class="btn dropdown-toggle" type="button" data-toggle="dropdown"><span class="material-symbols-outlined ">person</span></button>
-				<ul class="dropdown-menu">
-					<li><a href="#">Profile</a></li>
-					<li><a href="#">Setting</a></li>
-					<li><a href="{{ route('login.logout') }}">Logout</a></li>
-				</ul>
-			</div>
+				<div class="dropdown ">
+					<button class="btn dropdown-toggle d-flex flex-row align-items-center" type="button" data-toggle="dropdown"><span class="px-2 h5 font-weight-bold">{{ Auth::user()->name; }}</span><span class="material-symbols-outlined ">person</span></button>
+					<ul class="dropdown-menu">
+						<li><a href="{{ route('user.articles') }}">Profile</a></li>
+						<li><a href="{{ route('user.setting') }}">Settings</a></li>
+						<li><a href="{{ route('login.logout') }}">Logout</a></li>
+					</ul>
+				</div>
 			@endif
 		</ul>
 	</header>

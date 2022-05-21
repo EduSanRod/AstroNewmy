@@ -8,11 +8,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $name
  * @property float $price
- * @property string $image 
  * @property string $external_link 
  * @property string $click_count 
  */
-class CelestialObjectImages extends Model
+class Equipment extends Model
 {
     /**
      * The table associated with the model.
@@ -24,6 +23,6 @@ class CelestialObjectImages extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'price', 'description', 'image', 'external_link', 'click_count'];
+    protected $fillable = ['name', 'price', 'external_link', 'click_count'];
 
 }

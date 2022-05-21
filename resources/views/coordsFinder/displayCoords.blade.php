@@ -6,6 +6,7 @@
 	#coords-displayer {
 		position: relative;
 		width: 100%;
+		overflow: hidden;
 
 		margin: auto;
 		border: 1px solid black;
@@ -21,6 +22,7 @@
 	#background-image {
 		width: 100%;
 		height: 100%;
+		
 	}
 </style>
 
@@ -63,9 +65,11 @@
 </article>
 
 <article>
-	@foreach($celestialObjects as $celestialObject)
-	<p>Celestial Object: {{ $celestialObject }}</p>
-	@endforeach
+	<!--
+		@foreach($celestialObjects as $celestialObject)
+		<p>Celestial Object: {{ $celestialObject }}</p>
+		@endforeach
+	-->
 
 	<div class="mt-4">
 		<form>

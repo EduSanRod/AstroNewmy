@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Article;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Article;
 use App\Models\Comment;
+use App\Models\Equipment;
+use App\Models\ArticleEquipment;
 
 class ArticleController extends Controller
 {
@@ -73,8 +76,106 @@ class ArticleController extends Controller
 
         //Create the new information with the stored information
         $this->createArticle($articleData);
+        $article = DB::getPdo()->lastInsertId();
 
-        //TODO: Create equipment
+        //Create equipment
+
+            //Check if the article has any equipment to add
+            if($request->filled('equipment_name_1')){
+                //There is an input $equipment_name, so add all the fields.
+                $equipmentData1 = array();
+                $equipmentData1['equipment_name'] = $request->input('equipment_name_1');
+                $equipmentData1['equipment_price'] = $request->input('equipment_price_1');
+                $equipmentData1['equipment_link'] = $request->input('equipment_link_1');
+
+                //Create the equipment
+                $this->createEquipment($equipmentData1);
+                $equipment1 = DB::getPdo()->lastInsertId();
+
+                //add the equipment-article relationship table entry
+                $data = array();
+                $data["article_id"] = $article;
+                $data["equipment_id"] = $equipment1;
+
+                $this->createArticleEquipment($data);
+            }
+
+            if($request->filled('equipment_name_2')){
+                //There is an input $equipment_name, so add all the fields.
+                $equipmentData2 = array();
+                $equipmentData2['equipment_name'] = $request->input('equipment_name_2');
+                $equipmentData2['equipment_price'] = $request->input('equipment_price_2');
+                $equipmentData2['equipment_link'] = $request->input('equipment_link_2');
+
+                //Create the equipment
+                $this->createEquipment($equipmentData2);
+                $equipment2 = DB::getPdo()->lastInsertId();
+
+                //add the equipment-article relationship table entry
+                $data = array();
+                $data["article_id"] = $article;
+                $data["equipment_id"] = $equipment2;
+
+                $this->createArticleEquipment($data);
+            }
+
+            if($request->filled('equipment_name_3')){
+                //There is an input $equipment_name, so add all the fields.
+                $equipmentData3 = array();
+                $equipmentData3['equipment_name'] = $request->input('equipment_name_3');
+                $equipmentData3['equipment_price'] = $request->input('equipment_price_3');
+                $equipmentData3['equipment_link'] = $request->input('equipment_link_3');
+
+                //Create the equipment
+                $this->createEquipment($equipmentData3);
+                $equipment3 = DB::getPdo()->lastInsertId();
+
+                //add the equipment-article relationship table entry
+                $data = array();
+                $data["article_id"] = $article;
+                $data["equipment_id"] = $equipment3;
+
+                $this->createArticleEquipment($data);
+            }
+
+            if($request->filled('equipment_name_4')){
+                //There is an input $equipment_name, so add all the fields.
+                $equipmentData4 = array();
+                $equipmentData4['equipment_name'] = $request->input('equipment_name_4');
+                $equipmentData4['equipment_price'] = $request->input('equipment_price_4');
+                $equipmentData4['equipment_link'] = $request->input('equipment_link_4');
+
+                //Create the equipment
+                $this->createEquipment($equipmentData4);
+                $equipment4 = DB::getPdo()->lastInsertId();
+
+                //add the equipment-article relationship table entry
+                $data = array();
+                $data["article_id"] = $article;
+                $data["equipment_id"] = $equipment4;
+
+                $this->createArticleEquipment($data);
+            }
+
+            if($request->filled('equipment_name_5')){
+                //There is an input $equipment_name, so add all the fields.
+                $equipmentData5 = array();
+                $equipmentData5['equipment_name'] = $request->input('equipment_name_5');
+                $equipmentData5['equipment_price'] = $request->input('equipment_price_5');
+                $equipmentData5['equipment_link'] = $request->input('equipment_link_5');
+
+                //Create the equipment
+                $this->createEquipment($equipmentData5);
+                $equipment5 = DB::getPdo()->lastInsertId();
+
+                //add the equipment-article relationship table entry
+                $data = array();
+                $data["article_id"] = $article;
+                $data["equipment_id"] = $equipment5;
+
+                $this->createArticleEquipment($data);
+            }
+
 
         //Return to the article index
         return redirect()->route('article.index');
@@ -92,10 +193,12 @@ class ArticleController extends Controller
         
         $article = $this->getArticle($articleId);
         $comments = $this->getCommentsFromArticle($articleId);
+        $equipments = $this->getEquipmentsFromArticle($articleId);
         
         return view("article/show", [
             "article" => $article,
             "comments" => $comments,
+            "equipments" => $equipments,
         ]);
     }
 
@@ -170,6 +273,16 @@ class ArticleController extends Controller
         return $comments;
     }
 
+    public function getEquipmentsFromArticle($articleId){
+        $equipment = Article::join('articleequipment', 'article.id', '=', 'articleequipment.article_id')
+        ->join('equipment', 'articleequipment.equipment_id', '=', 'equipment.id')
+        ->select('equipment.name as equipment_name', 'equipment.price as equipment_price', 'equipment.external_link as equipment_link')
+        ->where('article.id', $articleId)
+        ->get();
+
+        return $equipment;
+    }
+
     public function generateRandomString($length = 16) {
         return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
     }
@@ -184,6 +297,26 @@ class ArticleController extends Controller
 			"user_id" => $articleData["article_user_id"],
 			"source" => $articleData["article_source"],
 			"celestial_object_id" => null,
+		]);
+
+    }
+
+    public function createEquipment($equipmentData){
+
+        Equipment::insert([
+			"name" => $equipmentData["equipment_name"],
+            "price" => $equipmentData["equipment_price"],
+            "external_link" => $equipmentData["equipment_link"], 
+            "click_count" => 0, 
+		]);
+
+    }
+
+    public function createArticleEquipment($data){
+
+        ArticleEquipment::insert([
+			"article_id" => $data["article_id"],
+            "equipment_id" => $data["equipment_id"],
 		]);
 
     }

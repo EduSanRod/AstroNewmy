@@ -33,18 +33,4 @@ class AboutController extends Controller
         return redirect('/about');
     }
 
-    public function test(){
-        $location = Location::create(41.6523, 4.7245); // Berlin
-
-        $toi = TimeOfInterest::createFromString('2018-05-13 16:15:00');
-
-        $neptune = Jupiter::create();
-
-        $locHorCoords = $neptune->getLocalHorizontalCoordinates($location);
-        $azimuth = $locHorCoords->getAzimuth();
-        $altitude = $locHorCoords->getAltitude();
-
-        echo $azimuth. "<br>";
-        echo $altitude;
-    }
 }

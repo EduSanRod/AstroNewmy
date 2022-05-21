@@ -69,12 +69,14 @@
 					<span class="material-symbols-outlined">thumb_up</span>
 					<span class="border-right vote"><strong>123</strong></span>
 				</button>
-				<button type="button" class="btn btn-danger px-5">
-					<span class="material-symbols-outlined">thumb_down</span>
-					<span class="border-right vote"><strong>123</strong></span>
-				</button>
+				
 				<button type="button" class="btn btn-dark px-5">
 					<span class="material-symbols-outlined">comment</span>
+					<span class="border-right vote"><strong>123</strong></span>
+				</button>
+
+				<button type="button" class="btn btn-danger px-5">
+					<span class="material-symbols-outlined">thumb_down</span>
 					<span class="border-right vote"><strong>123</strong></span>
 				</button>
 			</div>

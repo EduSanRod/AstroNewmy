@@ -1,0 +1,21 @@
+#!/usr/bin/python3
+print('Content-Type: text/html;charset=utf-8')
+print('') # esta linea es imprescindible
+
+import json
+import cgi
+from geopy.geocoders import Nominatim
+
+form = cgi.FieldStorage()
+city = form.getvalue('city')
+
+geolocator = Nominatim(user_agent="AstroNewmy")
+location = geolocator.geocode(city)
+
+x = {
+  "latitude": location.latitude,
+  "longitude": location.longitude,
+}
+jsondata = json.dumps(x)
+
+print(jsondata)

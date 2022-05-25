@@ -4,35 +4,7 @@
 
 <title>{{ Auth::user()->name; }} Articles</title>
 
-<style>
-
-	a, a:hover{
-		text-decoration: none;
-		color: black;
-	}
-
-	article{
-		width: 60%;
-	}
-
-	img{
-		width: 100%;
-	}
-
-	.material-symbols-outlined {
-		font-variation-settings:
-		'FILL' 1,
-		'wght' 700,
-		'GRAD' 0,
-		'opsz' 48
-	}
-
-	.vote{
-		font-size:large;
-	}
-
-
-</style>
+<link rel="stylesheet" type="text/css" href="{{ asset('css/user/articles.css') }}" >
 
 @endsection
 

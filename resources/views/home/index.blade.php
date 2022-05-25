@@ -4,27 +4,7 @@
 
 <title>AstroNewmy Home</title>
 
-<style>
-	.post-container {
-		width: 100%;
-	}
-
-	.article-container {
-		max-width: 33%;
-	}
-
-	.article-image {
-		max-width: 100%;
-		max-height: 100%;
-	}
-
-	a,
-	a:hover {
-		text-decoration: none;
-		color: black;
-	}
-
-</style>
+<link rel="stylesheet" type="text/css" href="{{ asset('css/home/index.css') }}" >
 
 @endsection
 

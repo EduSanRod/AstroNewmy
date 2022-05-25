@@ -5,42 +5,8 @@
 <title>AstroNewmy Home</title>
 
 <link rel="stylesheet" href="https://fonts.sandbox.google.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" type="text/css" href="{{ asset('css/article/index.css') }}" >
 
-<style>
-
-	a, a:hover{
-		text-decoration: none;
-		color: black;
-	}
-
-	article{
-		width: 60%;
-	}
-
-	img{
-		width: 100%;
-	}
-
-	.material-symbols-outlined {
-		font-variation-settings:
-		'FILL' 1,
-		'wght' 700,
-		'GRAD' 0,
-		'opsz' 48
-	}
-
-	.vote{
-		font-size:large;
-	}
-
-	#button-add-article{
-		position: fixed;
-		top: 3%;
-		right: 5%;
-	}
-
-
-</style>
 @endsection
 
 @section('section')

@@ -3,39 +3,8 @@
 @section('head')
 
 <title>AstroNewmy Home</title>
+<link rel="stylesheet" type="text/css" href="{{ asset('css/about/index.css') }}" >
 
-
-<style>
-
-	#content{
-		width: 100%;
-		display: flex;
-		flex-wrap: wrap;
-	}
-
-	#information{
-		width: 45%;
-		padding-right: 5%;
-	}
-
-	#contact-us-form{
-		width: 45%;
-		padding-left: 5%;
-	}
-
-	@media only screen and (max-width: 768px) {
-		#information{
-			width: 100%;
-			padding-right: 0%;
-		}
-		#contact-us-form{
-			width: 100%;
-			padding-left: 0%;
-		}
-	}
-
-
-</style>
 @endsection
 
 

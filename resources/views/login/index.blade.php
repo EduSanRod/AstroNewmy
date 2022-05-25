@@ -4,10 +4,6 @@
 
 <title>AstroNewmy Login</title>
 
-<style>
-
-</style>
-
 @endsection
 
 @section('section')

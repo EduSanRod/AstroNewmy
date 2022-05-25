@@ -2,29 +2,7 @@
 
 @section('head')
 <title>AstroNewmy Coords Finder</title>
-<style>
-	#coords-displayer {
-		position: relative;
-		width: 100%;
-		overflow: hidden;
-
-		margin: auto;
-		border: 1px solid black;
-	}
-
-	.celestialObjectImages {
-		width: 50px;
-		height: 50px;
-		z-index: 999;
-		position: absolute;
-	}
-
-	#background-image {
-		width: 100%;
-		height: 100%;
-		
-	}
-</style>
+<link rel="stylesheet" type="text/css" href="{{ asset('css/coordsFinder/display.css') }}" >
 
 
 @endsection

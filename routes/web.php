@@ -20,6 +20,7 @@ use App\Http\Controllers\Login\AuthController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 //----------- Login Routes ----------//
 Route::get("/login", [LoginController::class, 'displayLogin'])->name('login.index');
 Route::get('/login-auth', [AuthController::class, 'authenticate'])->name('login.authenticate');
@@ -48,9 +49,3 @@ Route::get("/create-comment", [CommentController::class, 'addComment'])->name('a
 //----------- About Routes ----------//
 Route::get("/about", [AboutController::class, 'displayAbout'])->name('about.display');
 Route::get("/send_mail", [AboutController::class, 'sendMessage'])->name('about.sendMessage');
-
-
-
-
-
-

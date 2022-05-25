@@ -4,43 +4,8 @@
 <title>AstroNewmy - Article</title>
 
 <link rel="stylesheet" href="https://fonts.sandbox.google.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" type="text/css" href="{{ asset('css/article/show.css') }}" >
 
-<style>
-	section {
-		width: 80%;
-	}
-
-	img {
-		width: 100%;
-	}
-
-	.material-symbols-outlined {
-		font-variation-settings:
-			'FILL'1,
-			'wght'200,
-			'GRAD'0,
-			'opsz'48
-	}
-
-	.vote {
-		font-size: large;
-	}
-
-	#form-add-comment{
-		width: 100%;
-	}
-
-	textarea{
-		resize: none;
-		overflow: hidden;
-	}
-
-	.equipment-link{
-		text-decoration: none;
-		font-size: larger;
-	}
-
-</style>
 @endsection
 
 @section('section')

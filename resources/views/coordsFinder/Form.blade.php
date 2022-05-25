@@ -2,70 +2,8 @@
 
 @section('head')
 	
-	<style>
-		form > ul {
-			list-style-type: none;
-		}
-
-		li {
-			display: inline-block;
-		}
-
-		input[type="checkbox"] {
-			display: none;
-		}
-
-		li > label {
-			border: 1px solid #fff;
-			padding: 10px;
-			display: block;
-			position: relative;
-			margin: 10px;
-			cursor: pointer;
-			text-align: center;
-		}
-
-		li > label:before {
-			background-color: white;
-			color: white;
-			content: " ";
-			display: block;
-			border-radius: 50%;
-			border: 1px solid grey;
-			position: absolute;
-			top: -5px;
-			left: -5px;
-			width: 25px;
-			height: 25px;
-			text-align: center;
-			line-height: 28px;
-			transition-duration: 1s;
-			transform: scale(0);
-		}
-
-		label img {
-			height: 150px;
-			width: 150px;
-		}
-
-		:checked + label {
-			border-color: #ddd;
-		}
-
-		:checked + label:before {
-			content: "✓";
-			background-color: lightgreen;
-			color: black;
-			transform: scale(1);
-		}
-
-		:checked + label img {
-			box-shadow: 0 0 5px #333;
-			z-index: -1;
-		}
-
-	</style>
 	<title>AstroNewmy Coords Finder</title>
+	<link rel="stylesheet" type="text/css" href="{{ asset('css/coordsFinder/form.css') }}" >
 @endsection
 
 @section('section')

@@ -23,7 +23,7 @@ use App\Http\Controllers\Login\AuthController;
 
 //----------- Login Routes ----------//
 Route::get("/login", [LoginController::class, 'displayLogin'])->name('login.index');
-Route::get('/login-auth', [AuthController::class, 'authenticate'])->name('login.authenticate');
+Route::post('/login-auth', [AuthController::class, 'authenticate'])->name('login.authenticate');
 Route::get('/login-out', [LoginController::class, 'logout'])->name('login.logout');
 Route::get('/register', [LoginController::class, 'createLoginForm'])->name('login.create-form');
 Route::post('/login-create', [LoginController::class, 'createLogin'])->name('login.create');

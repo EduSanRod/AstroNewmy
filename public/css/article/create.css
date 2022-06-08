@@ -1,0 +1,132 @@
+:root {
+	--color-white: white;
+	--color-black: black;
+
+	--main-color: #A70CF5;
+	--main-color-light: #edc9ff;
+	--main-color-dark: #7A09B3;
+}
+
+#main-section {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.form-container {
+	width: 50%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+}
+
+form, form>* {
+	width: 100%;
+}
+
+/* ----- Inputs and labels ----- */
+
+.form-input {
+	border: none;
+	outline: none;
+	border-bottom: 1px solid var(--main-color);
+	background: none;
+	font-size: 2rem;
+}
+
+label {
+	font-size: 2rem;
+	padding: 20px 0px 0px;
+}
+
+textarea{
+	border: 1px solid var(--main-color);
+	resize: none;
+	border-radius: 5px;
+}
+
+/* -- Inputs from the equipment -- */
+
+.equipment-container{
+	border: 1px solid var(--main-color-light);
+	padding: 20px;
+	margin: 20px 0px 20px;
+	border-radius: 15px;
+}
+
+.equipment-type{
+	width: 100%;
+	padding: 10px;
+	background-color: var(--color-white);
+	border: none;
+	outline: none;
+	border: 1px solid var(--main-color);
+	border-radius: 5px;
+	font-size: 1.75rem;
+}
+
+.equipment-type > option{
+	background: var(--color-white);
+	font-size: 1.5rem;
+}
+
+.equipment-name{
+	width: 100%;
+}
+
+/* ----- Buttons ----- */
+
+#add-equipment-button {
+
+	align-self: start;
+	padding: 10px 10px 10px;
+	width: fit-content;
+	margin-top: 20px;
+
+	border-radius: 10px;
+	border: none;
+	background: var(--main-color-light);
+	color: var(--color-black);
+	font-size: 1.75rem;
+}
+
+.create-article{
+	margin-top: 50px;
+	padding: 10px 0px 10px;
+
+	border-radius: 30px;
+	border: none;
+	background: var(--main-color);
+	color: var(--color-white);
+	font-size: 2rem;
+	font-weight: bold;
+}
+
+.button-delete-equipment{
+	padding: 10px 10px 10px;
+	margin-top: 25px;
+	border-radius: 10px;
+	border: none;
+	background: var(--main-color-dark);
+	color: var(--color-white);
+	font-size: 1.75rem;
+	width: fit-content;
+}
+
+.back-link{
+	align-self: start;
+	padding: 10px 20px 10px;
+	width: fit-content;
+	margin: 50px 0px 50px;
+
+	border-radius: 10px;
+	border: none;
+	background: var(--main-color-dark);
+	color: var(--color-white);
+	font-size: 1.75rem;
+}
+
+.back-link:hover{
+	color: var(--color-white);
+}

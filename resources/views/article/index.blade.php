@@ -5,48 +5,46 @@
 <title>AstroNewmy Home</title>
 
 <link rel="stylesheet" href="https://fonts.sandbox.google.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-<link rel="stylesheet" type="text/css" href="{{ asset('css/article/index.css') }}" >
+<link rel="stylesheet" type="text/css" href="{{ asset('css/article/index.css') }}">
 
 @endsection
 
 @section('section')
 
-<section id="content" class="d-flex justify-content-center flex-nowrap flex-column align-items-center">
+<section id="content">
 	@if (!Auth::guest())
-		<div id="button-add-article">
-			<a href="{{ route('article.create') }}" class="btn btn-dark d-flex justify-content-center align-items-center">
-				<span class="material-symbols-outlined">add</span>
-			</a>
-		</div>
+	<div id="button-add-article">
+		<a href="{{ route('article.create') }}">
+			<span class="material-symbols-outlined">add</span>
+		</a>
+	</div>
 	@endif
 
 	@foreach($articles as $article)
-		<article class="border-bottom py-5">
+	<article class="article-container">
+		<div class="post-continer">
 			<a href="{{ route('article.show', ['article'=>$article->article_id]) }}" target="_blank">
-				<div class="post-title py-2">
-					<h2><strong>{{ $article->article_title }}</strong></h2>
-				</div>
-				<div class="post-content">
-					<img src="{{ $article->article_image }}" alt="{{ $article->article_description }}">
-				</div>
+				<p>{{ $article->article_title }}</p>
+				<img src="{{ $article->article_image }}" alt="{{ $article->article_description }}">
 			</a>
-			<div class="d-flex justify-content-around post-buttons py-3">
-				<button type="button" class="btn btn-success px-5">
-					<span class="material-symbols-outlined">thumb_up</span>
-					<span class="border-right vote"><strong>123</strong></span>
-				</button>
-				
-				<button type="button" class="btn btn-dark px-5">
-					<span class="material-symbols-outlined">comment</span>
-					<span class="border-right vote"><strong>123</strong></span>
-				</button>
+		</div>
+		<div class="button-continer">
+			<button class="button-upvote">
+				<span class="material-symbols-outlined">thumb_up</span>
+				<span class="border-right vote"><strong>123</strong></span>
+			</button>
 
-				<button type="button" class="btn btn-danger px-5">
-					<span class="material-symbols-outlined">thumb_down</span>
-					<span class="border-right vote"><strong>123</strong></span>
-				</button>
-			</div>
-		</article>
+			<button class="button-comment">
+				<span class="material-symbols-outlined">comment</span>
+				<span class="border-right vote"><strong>123</strong></span>
+			</button>
+
+			<button class="button-downvote">
+				<span class="material-symbols-outlined">thumb_down</span>
+				<span class="border-right vote"><strong>123</strong></span>
+			</button>
+		</div>
+	</article>
 	@endforeach
 </section>
 

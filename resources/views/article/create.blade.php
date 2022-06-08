@@ -4,7 +4,7 @@
 <title>AstroNewmy - Article</title>
 
 <link rel="stylesheet" href="https://fonts.sandbox.google.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-
+<link rel="stylesheet" type="text/css" href="{{ asset('css/article/create.css') }}">
 @endsection
 
 @section('section')
@@ -12,42 +12,35 @@
 <div id="alertMessage" role="alert" class="alert">
 </div>
 
-<form action="{{ route('article.store') }}" method="post" enctype="multipart/form-data" onsubmit="return validateForm()" class="mx-auto m-4">
-	@csrf
-	<div class="form-group">
+<div class="form-container">
+	<form action="{{ route('article.store') }}" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+		@csrf
 		<label for="article_title">Title</label>
-		<input type="text" class="form-control" id="article_title" name="article_title" minlength="4" maxlength="25" placeholder="Title">
-	</div>
+		<input type="text" id="article_title" name="article_title" class="form-input" minlength="4" maxlength="25">
 
-	<div class="form-group">
 		<label for="article_image">Image of the article</label>
-		<input type="file" class="form-control-file" id="article_image" name="article_image" accept="image/*">
-	</div>
+		<input type="file" id="article_image" name="article_image" accept="image/*">
 
-	<div class="form-group">
 		<label for="article_description">Description (optional)</label>
-		<textarea class="form-control" id="article_description" name="article_description" rows="4"></textarea>
-	</div>
+		<textarea id="article_description" name="article_description" rows="5"></textarea>
 
-	<div class="form-group">
-		<label for="article_source">Source link (optional)</label>
-		<input type="url" class="form-control" id="article_source" name="article_source">
-	</div>
+		<input type="hidden" name="article_user_id" value="{{ Auth::user()->id; }}">
 
-	<input type="hidden" name="article_user_id" value="{{ Auth::user()->id; }}">
+		<button type="button" id="add-equipment-button">Add Equipment</button>
 
-	<button type="button" id="add-equipment-button" class="btn btn-success mb-4">Add Equipment</button>
-	<div id="equipment-form-container" class="mb-4">
+		<div id="equipment-form-container">
+		</div>
 
-	</div>
+		<input type="submit" value="Create Article" class="create-article">
 
-	<input type="submit" class="btn btn-primary" value="Create Article">
+	</form>
 
-</form>
+	<a href="{{ route('article.index') }}" class="back-link">
+		Back
+	</a>
+</div>
 
-<a href="{{ route('article.index') }}" class="btn btn-secondary">
-	Back
-</a>
+
 
 @endsection
 <script>
@@ -90,41 +83,30 @@
 			if (equipmentNumber <= 5) {
 				const fragment = document.createDocumentFragment();
 
+				//Create the container for the equipment inputs
 				let divContainerInput = document.createElement("div");
 				divContainerInput.id = "div_container_" + equipmentNumber;
-				divContainerInput.classList.add("border");
-				divContainerInput.classList.add("p-4");
-				divContainerInput.classList.add("mb-4");
+				divContainerInput.classList.add("equipment-container");
 
+				//Input for the type of equipment
+				let divTypeInput = document.createElement("div");
+				divTypeInput.id = "div_equipment_type_" + equipmentNumber;
+				divTypeInput.innerHTML = "<label for='equipment_type_" + equipmentNumber + "'>Type of the equipment</label><br><select name='equipment_name_" + equipmentNumber + "' class='equipment-type'><option value='telescope'>Telescope</option><option value='camera'>Camera</option><option value='other'>Other</option></select>";
+				divContainerInput.append(divTypeInput);
+
+				//Input for the name of the equipment
 				let divNameInput = document.createElement("div");
 				divNameInput.id = "div_equipment_name_" + equipmentNumber;
-				divNameInput.classList.add("form-group");
-				divNameInput.classList.add("p-2");
-				divNameInput.innerHTML = "<label for='equipment_name_" + equipmentNumber + "'>Name of the equipment</label><input type='text' minlength='4' maxlength='25' class='form-control' name='equipment_name_" + equipmentNumber + "'>";
+				divNameInput.innerHTML = "<label for='equipment_name_" + equipmentNumber + "'>Name of the equipment</label><br><input type='text' minlength='4' maxlength='25' class='form-input equipment-name' name='equipment_name_" + equipmentNumber + "'>";
 				divContainerInput.append(divNameInput);
 
-				let divPriceInput = document.createElement("div");
-				divPriceInput.id = "div_equipment_price_" + equipmentNumber;
-				divPriceInput.classList.add("form-group");
-				divPriceInput.classList.add("p-2");
-				divPriceInput.innerHTML = "<label for='equipment_price_" + equipmentNumber + "'>Price of the equipment (optional)</label><input type='number' class='form-control' step='.01' name='equipment_price_" + equipmentNumber + "'>";
-				divContainerInput.append(divPriceInput);
-
-				let divLinkInput = document.createElement("div");
-				divLinkInput.id = "div_equipment_link_" + equipmentNumber;
-				divLinkInput.classList.add("form-group");
-				divLinkInput.classList.add("p-2");
-				divLinkInput.innerHTML = "<label for='equipment_link_" + equipmentNumber + "'>Link to get more info of the equipment (optional)</label><input type='url' class='form-control' name='equipment_link_" + equipmentNumber + "'>";
-				divContainerInput.append(divLinkInput);
-
+				//Button to delete the equipment fragment
 				let ButtonDeleteInput = document.createElement("button");
 				ButtonDeleteInput.type = "button";
 				ButtonDeleteInput.id = equipmentNumber;
 				ButtonDeleteInput.classList.add("button-delete-equipment");
-				ButtonDeleteInput.classList.add("btn");
-				ButtonDeleteInput.classList.add("btn-danger");
 				ButtonDeleteInput.innerHTML = "Delete";
-				ButtonDeleteInput.onclick = function(){
+				ButtonDeleteInput.onclick = function() {
 					document.getElementById('div_container_' + this.id).remove();
 				}
 				divContainerInput.append(ButtonDeleteInput);
@@ -138,8 +120,4 @@
 		});
 
 	});
-
-	
-
-
 </script>

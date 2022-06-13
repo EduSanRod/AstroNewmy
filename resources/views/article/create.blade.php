@@ -26,10 +26,10 @@
 
 		<input type="hidden" name="article_user_id" value="{{ Auth::user()->id; }}">
 
-		<button type="button" id="add-equipment-button">Add Equipment</button>
-
 		<div id="equipment-form-container">
 		</div>
+
+		<button type="button" id="add-equipment-button">Add Equipment</button>
 
 		<input type="submit" value="Create Article" class="create-article">
 
@@ -91,7 +91,7 @@
 				//Input for the type of equipment
 				let divTypeInput = document.createElement("div");
 				divTypeInput.id = "div_equipment_type_" + equipmentNumber;
-				divTypeInput.innerHTML = "<label for='equipment_type_" + equipmentNumber + "'>Type of the equipment</label><br><select name='equipment_name_" + equipmentNumber + "' class='equipment-type'><option value='telescope'>Telescope</option><option value='camera'>Camera</option><option value='other'>Other</option></select>";
+				divTypeInput.innerHTML = "<label for='equipment_type_" + equipmentNumber + "'>Type of the equipment</label><br><select name='equipment_type_" + equipmentNumber + "' class='equipment-type'><option value='telescope'>Telescope</option><option value='camera'>Camera</option><option value='software'>Software</option><option value='other'>Other</option></select>";
 				divContainerInput.append(divTypeInput);
 
 				//Input for the name of the equipment

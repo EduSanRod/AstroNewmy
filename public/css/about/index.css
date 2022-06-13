@@ -43,6 +43,11 @@
 	font-size: 2rem;
 }
 
+textarea{
+	resize: none;
+	font-size: 1.75rem;
+}
+
 label{
 	font-size: 2rem;
 	padding: 20px 0px 5px;

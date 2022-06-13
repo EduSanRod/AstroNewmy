@@ -20,11 +20,10 @@ class ArticleController extends Controller
      */
     public function index($celestialObject = null)
     {
-        if($celestialObject == null){
+        if ($celestialObject == null) {
             //There is no filter for posts, show all of them.
             $articles = $this->getAllArticles();
-
-        }else{
+        } else {
             //There is a filter
             $articles = $this->getAllArticlesOf($celestialObject);
         }
@@ -54,7 +53,7 @@ class ArticleController extends Controller
     {
 
         //Get all the information from the form
-         
+
         $articleData = array();
         $articleData["article_title"] = $request->input('article_title');
         $articleData["article_description"] = $request->input('article_description');
@@ -65,11 +64,11 @@ class ArticleController extends Controller
         //-------- Store image ----------//
 
         //Define the image name and path /imagenes/article/<image-name>.jpg
-		$imageName = $articleData["article_slug"]. ".jpg";
-        $pathToSaveFile = 'imagenes/article/'. $imageName;
+        $imageName = $articleData["article_slug"] . ".jpg";
+        $pathToSaveFile = 'imagenes/article/' . $imageName;
 
-		// Move the file to the proper folder
-		move_uploaded_file( $_FILES['article_image']['tmp_name'], $pathToSaveFile);
+        // Move the file to the proper folder
+        move_uploaded_file($_FILES['article_image']['tmp_name'], $pathToSaveFile);
 
         //Store in database the path to the image
         $articleData["article_image"] = $pathToSaveFile;
@@ -80,106 +79,29 @@ class ArticleController extends Controller
 
         //Create equipment
 
-            //Check if the article has any equipment to add
-            if($request->filled('equipment_name_1')){
+        //Check if the article has any equipment to add
+        for ($i = 1; $i <= 5; $i++) {
+            if ($request->filled('equipment_name_' . $i)) {
                 //There is an input $equipment_name, so add all the fields.
-                $equipmentData1 = array();
-                $equipmentData1['equipment_name'] = $request->input('equipment_name_1');
-                $equipmentData1['equipment_price'] = $request->input('equipment_price_1');
-                $equipmentData1['equipment_link'] = $request->input('equipment_link_1');
+                $equipmentData = array();
+                $equipmentData['equipment_name'] = $request->input('equipment_name_' . $i);
+                $equipmentData['equipment_type'] = $request->input('equipment_type_' . $i);
 
                 //Create the equipment
-                $this->createEquipment($equipmentData1);
-                $equipment1 = DB::getPdo()->lastInsertId();
+                $this->createEquipment($equipmentData);
+                $equipment = DB::getPdo()->lastInsertId();
 
                 //add the equipment-article relationship table entry
                 $data = array();
                 $data["article_id"] = $article;
-                $data["equipment_id"] = $equipment1;
+                $data["equipment_id"] = $equipment;
 
                 $this->createArticleEquipment($data);
             }
-
-            if($request->filled('equipment_name_2')){
-                //There is an input $equipment_name, so add all the fields.
-                $equipmentData2 = array();
-                $equipmentData2['equipment_name'] = $request->input('equipment_name_2');
-                $equipmentData2['equipment_price'] = $request->input('equipment_price_2');
-                $equipmentData2['equipment_link'] = $request->input('equipment_link_2');
-
-                //Create the equipment
-                $this->createEquipment($equipmentData2);
-                $equipment2 = DB::getPdo()->lastInsertId();
-
-                //add the equipment-article relationship table entry
-                $data = array();
-                $data["article_id"] = $article;
-                $data["equipment_id"] = $equipment2;
-
-                $this->createArticleEquipment($data);
-            }
-
-            if($request->filled('equipment_name_3')){
-                //There is an input $equipment_name, so add all the fields.
-                $equipmentData3 = array();
-                $equipmentData3['equipment_name'] = $request->input('equipment_name_3');
-                $equipmentData3['equipment_price'] = $request->input('equipment_price_3');
-                $equipmentData3['equipment_link'] = $request->input('equipment_link_3');
-
-                //Create the equipment
-                $this->createEquipment($equipmentData3);
-                $equipment3 = DB::getPdo()->lastInsertId();
-
-                //add the equipment-article relationship table entry
-                $data = array();
-                $data["article_id"] = $article;
-                $data["equipment_id"] = $equipment3;
-
-                $this->createArticleEquipment($data);
-            }
-
-            if($request->filled('equipment_name_4')){
-                //There is an input $equipment_name, so add all the fields.
-                $equipmentData4 = array();
-                $equipmentData4['equipment_name'] = $request->input('equipment_name_4');
-                $equipmentData4['equipment_price'] = $request->input('equipment_price_4');
-                $equipmentData4['equipment_link'] = $request->input('equipment_link_4');
-
-                //Create the equipment
-                $this->createEquipment($equipmentData4);
-                $equipment4 = DB::getPdo()->lastInsertId();
-
-                //add the equipment-article relationship table entry
-                $data = array();
-                $data["article_id"] = $article;
-                $data["equipment_id"] = $equipment4;
-
-                $this->createArticleEquipment($data);
-            }
-
-            if($request->filled('equipment_name_5')){
-                //There is an input $equipment_name, so add all the fields.
-                $equipmentData5 = array();
-                $equipmentData5['equipment_name'] = $request->input('equipment_name_5');
-                $equipmentData5['equipment_price'] = $request->input('equipment_price_5');
-                $equipmentData5['equipment_link'] = $request->input('equipment_link_5');
-
-                //Create the equipment
-                $this->createEquipment($equipmentData5);
-                $equipment5 = DB::getPdo()->lastInsertId();
-
-                //add the equipment-article relationship table entry
-                $data = array();
-                $data["article_id"] = $article;
-                $data["equipment_id"] = $equipment5;
-
-                $this->createArticleEquipment($data);
-            }
-
+        }
 
         //Return to the article index
         return redirect()->route('article.index');
-
     }
 
     /**
@@ -190,11 +112,11 @@ class ArticleController extends Controller
      */
     public function show($articleId)
     {
-        
+
         $article = $this->getArticle($articleId);
         $comments = $this->getCommentsFromArticle($articleId);
         $equipments = $this->getEquipmentsFromArticle($articleId);
-        
+
         return view("article/show", [
             "article" => $article,
             "comments" => $comments,
@@ -238,86 +160,90 @@ class ArticleController extends Controller
 
     //------------ Query Functions ------------//
 
-    public function getAllArticles(){
+    public function getAllArticles()
+    {
         $celestialObjects = Article::select("article.id as article_id", "article.title as article_title", "article.slug as article_slug", "article.description as article_description", "article.image as article_image", "article.user_id as article_user_id", "article.source as article_source", "article.celestial_object_id  as article_celestial_object_id ")
-        ->orderBy('id', 'DESC')
-		->get();
+            ->orderBy('id', 'DESC')
+            ->get();
 
         return $celestialObjects;
     }
 
-    public function getAllArticlesOf($celestialObject){
+    public function getAllArticlesOf($celestialObject)
+    {
         $celestialObjects = Article::select("article.id as article_id", "article.title as article_title", "article.slug as article_slug", "article.description as article_description", "article.image as article_image", "article.user_id as article_user_id", "article.source as article_source", "article.celestial_object_id  as article_celestial_object_id ")
-        ->where('article.celestial_object_id', $celestialObject)
-        ->orderBy('id', 'DESC')
-		->get();
+            ->where('article.celestial_object_id', $celestialObject)
+            ->orderBy('id', 'DESC')
+            ->get();
 
         return $celestialObjects;
     }
 
-    public function getArticle($articleId){
+    public function getArticle($articleId)
+    {
         $celestialObject = Article::select("article.id as article_id", "article.title as article_title", "article.slug as article_slug", "article.description as article_description", "article.image as article_image", "article.user_id as article_user_id", "article.source as article_source", "article.celestial_object_id as article_celestial_object_id")
-        ->where('article.id', $articleId)
-		->first();
+            ->where('article.id', $articleId)
+            ->first();
 
         return $celestialObject;
     }
 
-    public function getCommentsFromArticle($articleId){
+    public function getCommentsFromArticle($articleId)
+    {
         $comments = Comment::join('users', 'comment.user_id', '=', 'users.id')
-        ->select("comment.id as comment_id", "comment.comment_text as comment_comment_text", "comment.likes as comment_likes", "comment.dislikes as comment_dislikes", "users.name as comment_author", "comment.article_id as comment_article_id", "comment.created_at as comment_created_at")
-        ->where('comment.article_id', $articleId)
-        ->orderBy('comment.created_at', 'DESC')
-		->get();
+            ->select("comment.id as comment_id", "comment.comment_text as comment_comment_text", "comment.likes as comment_likes", "comment.dislikes as comment_dislikes", "users.name as comment_author", "comment.article_id as comment_article_id", "comment.created_at as comment_created_at")
+            ->where('comment.article_id', $articleId)
+            ->orderBy('comment.created_at', 'DESC')
+            ->get();
 
         return $comments;
     }
 
-    public function getEquipmentsFromArticle($articleId){
+    public function getEquipmentsFromArticle($articleId)
+    {
         $equipment = Article::join('articleequipment', 'article.id', '=', 'articleequipment.article_id')
-        ->join('equipment', 'articleequipment.equipment_id', '=', 'equipment.id')
-        ->select('equipment.name as equipment_name', 'equipment.price as equipment_price', 'equipment.external_link as equipment_link')
-        ->where('article.id', $articleId)
-        ->get();
+            ->join('equipment', 'articleequipment.equipment_id', '=', 'equipment.id')
+            ->select('equipment.name as equipment_name', 'equipment.type as equipment_type')
+            ->where('article.id', $articleId)
+            ->get();
 
         return $equipment;
     }
 
-    public function generateRandomString($length = 16) {
-        return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
+    public function generateRandomString($length = 16)
+    {
+        return substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length / strlen($x)))), 1, $length);
     }
 
-    public function createArticle($articleData){
+    public function createArticle($articleData)
+    {
 
         Article::insert([
-			"title" => $articleData["article_title"], 
-			"slug" => $articleData["article_slug"],
-			"description" => $articleData["article_description"],
-			"image" => $articleData["article_image"],
-			"user_id" => $articleData["article_user_id"],
-			"source" => $articleData["article_source"],
-			"celestial_object_id" => null,
-		]);
-
+            "title" => $articleData["article_title"],
+            "slug" => $articleData["article_slug"],
+            "description" => $articleData["article_description"],
+            "image" => $articleData["article_image"],
+            "user_id" => $articleData["article_user_id"],
+            "source" => $articleData["article_source"],
+            "celestial_object_id" => null,
+        ]);
     }
 
-    public function createEquipment($equipmentData){
+    public function createEquipment($equipmentData)
+    {
 
         Equipment::insert([
-			"name" => $equipmentData["equipment_name"],
-            "price" => $equipmentData["equipment_price"],
-            "external_link" => $equipmentData["equipment_link"], 
-            "click_count" => 0, 
-		]);
-
+            "name" => $equipmentData["equipment_name"],
+            "type" => $equipmentData["equipment_type"],
+        ]);
     }
 
-    public function createArticleEquipment($data){
+    public function createArticleEquipment($data)
+    {
 
         ArticleEquipment::insert([
-			"article_id" => $data["article_id"],
+            "article_id" => $data["article_id"],
             "equipment_id" => $data["equipment_id"],
-		]);
-
+        ]);
     }
 }

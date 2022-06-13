@@ -4,91 +4,90 @@
 <title>AstroNewmy - Article</title>
 
 <link rel="stylesheet" href="https://fonts.sandbox.google.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-<link rel="stylesheet" type="text/css" href="{{ asset('css/article/show.css') }}" >
+<link rel="stylesheet" type="text/css" href="{{ asset('css/article/show.css') }}">
 
 @endsection
 
 @section('section')
-<div class="d-flex flex justify-content-center">
-<section id="content">
-		<div class="post-title py-2">
-			<h2><strong>{{ $article->article_title }}</strong></h2>
-		</div>
 
-		<div class="post-content">
-			<img src="/{{ $article->article_image }}" alt="{{ $article->article_description }}">
-		</div>
+<article class="post">
+	<article class="post-content">
+		<h2>{{ $article->article_title }}</h2>
 
-		<div class="post-buttons d-flex justify-content-around">
-			<button type="button" class="btn btn-success d-flex flex-column m-4 px-4">
+		<img src="/{{ $article->article_image }}" alt="{{ $article->article_description }}">
+
+		<div class="post-buttons">
+			<button type="button" class="button-upvote">
 				<span class="material-symbols-outlined">thumb_up</span>
-				<span class="border-right vote"><strong>123</strong></span>
+				<span class="vote">123</span>
 			</button>
 
-			<button type="button" class="btn btn-dark d-flex flex-column m-4 px-4">
+			<button type="button" class="button-comment">
 				<span class="material-symbols-outlined">comment</span>
-				<span class="border-right vote"><strong>123</strong></span>
+				<span class="vote">123</span>
 			</button>
 
-			<button type="button" class="btn btn-danger d-flex flex-column m-4 px-4">
+			<button type="button" class="button-downvote">
 				<span class="material-symbols-outlined">thumb_down</span>
-				<span class="border-right vote"><strong>123</strong></span>
+				<span class="vote">123</span>
 			</button>
 		</div>
+
+
 
 		@if(isset($equipments))
-			<article id="equipment-container" class="">
-			<p class="h3"><strong>Equipment</strong></p>
-				@foreach( $equipments as $equipment )
-					<div>
-						<a class="equipment-link link-info" href="{{ $equipment->equipment_link }}" target="_blank"><p class="h4"><strong>{{ $equipment->equipment_name }} - {{ $equipment->equipment_price }}€</strong></p></a>
-					</div>
-				@endforeach
-			</article>
-		@endif
-		
-		@if (!Auth::guest())
-			<div class="add-comment-container d-flex mt-4">
-				<form id="form-add-comment" action="{{ route('article.create-comment') }}">
-					<div class="form-group">
-						<textarea class="form-control" name="comment_text" id="comment_text" rows="4" placeholder="Write a comment..."></textarea>
-					</div>
-
-					<input type="hidden" name="user_id" value="{{ Auth::user()->id; }}">
-					<input type="hidden" name="article_id" value="{{ $article->article_id }}">
-
-					<div class="col-auto ml-auto d-flex justify-content-end">
-						<button type="submit" class="btn btn-primary mb-2" maxlength="255">Comment</button>
-					</div>
-				</form>
+		<article class="equipment">
+			<p class="equipment-title">Equipment</p>
+			@foreach( $equipments as $equipment )
+			<div class="equipment-container">
+				<img class="equipment-icon" src="/imagenes/iconos/equipment/{{ $equipment->equipment_type }}.svg" alt="Icon of a {{ $equipment->equipment_type }}">
+				<span class="equipment-name">{{ $equipment->equipment_name }}</span>
 			</div>
-		@endif
-	
-		<hr>
-
-		<article class="comments-container">
-			@if(!$comments->isEmpty())
-				@foreach($comments as $comment)
-					<article class="comment border rounded mb-3 px-4">
-						<h3 class="inline-block ">{{ $comment->comment_author }} </h3>
-						<h5 class="inline-block text-muted ">{{ $comment->comment_created_at }}</h5>
-						<h3 class="text-dark "><small class="text-dark">{{ $comment->comment_comment_text }}</small></h3>
-						<button type="button" class="btn btn-outline-success btn-sm">
-							<span class="material-symbols-outlined">thumb_up</span>
-							<span class="border-right vote">{{ $comment->comment_likes }}</span>
-						</button>
-						<button type="button" class="btn btn-outline-danger btn-sm">
-							<span class="material-symbols-outlined">thumb_down</span>
-							<span class="border-right vote">{{ $comment->comment_dislikes }}</span>
-						</button>
-					</article>
-				@endforeach
-			@else
-				<p>This seem kinda empty. Be the first to leave a comment!</p>
-			@endif
+			@endforeach
 		</article>
-	</section>
-</div>
+		@endif
+	</article>
+	<hr>
+
+	@if (!Auth::guest())
+	<article class="add-comment-container">
+		<form class="form-add-comment" action="{{ route('article.create-comment') }}">
+			<textarea name="comment_text" id="comment_text" rows="4" placeholder="Write a comment..."></textarea>
+
+			<input type="hidden" name="user_id" value="{{ Auth::user()->id; }}">
+			<input type="hidden" name="article_id" value="{{ $article->article_id }}">
+
+			<button type="submit" maxlength="255">Comment</button>
+		</form>
+	</article>
+	@endif
+
+	<article class="comments-container">
+		@if(!$comments->isEmpty())
+		@foreach($comments as $comment)
+		<article class="comment">
+			<h3 class="comment-author">{{ $comment->comment_author }} </h3>
+			<p class="comment-timestamp">{{ $comment->comment_created_at }}</p>
+			<p class="comment-text">{{ $comment->comment_comment_text }}</p>
+			<div class="comment-buttons">
+				<button type="button" class="button-upvote">
+					<span class="material-symbols-outlined">thumb_up</span>
+					<span class="vote">123</span>
+				</button>
+
+				<button type="button" class="button-downvote">
+					<span class="material-symbols-outlined">thumb_down</span>
+					<span class="vote">123</span>
+				</button>
+			</div>
+		</article>
+		@endforeach
+		@else
+		<p class="empty-comment">This seem kinda empty. Be the first to leave a comment!</p>
+		@endif
+	</article>
+</article>
+
 
 
 @endsection

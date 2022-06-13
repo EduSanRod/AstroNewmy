@@ -51,7 +51,7 @@
 			<input type="text" id="subject" name="subject" class="form-input" >
 
 			<label for="comment">Comment</label><br>
-			<textarea id="comment" name="comment" rows="10""></textarea>
+			<textarea id="comment" name="comment" rows="7"></textarea>
 
 			<button type="submit" class="submit-button">Send Message</button>
 

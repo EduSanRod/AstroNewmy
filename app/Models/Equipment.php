@@ -7,9 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $id
  * @property string $name
- * @property float $price
- * @property string $external_link 
- * @property string $click_count 
+ * @property string $type 
  */
 class Equipment extends Model
 {
@@ -23,6 +21,6 @@ class Equipment extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'price', 'external_link', 'click_count'];
+    protected $fillable = ['name', 'type'];
 
 }

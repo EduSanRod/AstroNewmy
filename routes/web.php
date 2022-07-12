@@ -9,6 +9,7 @@ use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\Article\CommentController;
 use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\Login\AuthController;
+use App\Http\Controllers\WhereToStart\WhereToStartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,9 +39,12 @@ Route::get('/user/profile/comments', [LoginController::class, 'showUserComments'
 //----------- Home Routes ----------//
 Route::get("/home", [HomeController::class, 'displayHome'])->name('home.display');
 
+//----------- WhereToStart Routes ----------//
+Route::get("/where-to-start", [WhereToStartController::class, 'index'])->name('wheretostart.index');
+
 //----------- Coord Finder Routes ----------//
-Route::get("/coordenates_finder_form", [CoordsFinderController::class, 'displayForm'])->name('coords.form');
-Route::post("/coordenates_finder_result", [CoordsFinderController::class, 'displayCoordenates'])->name('coords.display');
+//Route::get("/coordenates_finder_form", [CoordsFinderController::class, 'displayForm'])->name('coords.form');
+//Route::post("/coordenates_finder_result", [CoordsFinderController::class, 'displayCoordenates'])->name('coords.display');
 
 //----------- Article & Comments Routes ----------//
 Route::resource('article', ArticleController::class);

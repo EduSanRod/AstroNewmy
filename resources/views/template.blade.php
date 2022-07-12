@@ -33,10 +33,10 @@
 		</a>
 
 		<ul>
-			<li><a href="/home" class="{{ Request::routeIs('home.display') ? 'active-page' : '' }}">Home</a></li>
-			<li><a href="/coordenates_finder_form" class="{{ Request::routeIs('coords.*') ? 'active-page' : '' }}">Coords Finder</a></li>
-			<li><a href="/article" class="{{ Request::routeIs('article.*') ? 'active-page' : '' }}">Articles</a></li>
-			<li><a href="/about" class="{{ Request::routeIs('about.*') ? 'active-page' : '' }}">About</a></li>
+			<li><a href="{{ route('home.display') }}" class="{{ Request::routeIs('home.display') ? 'active-page' : '' }}">Home</a></li>
+			<li><a href="{{ route('wheretostart.index') }}" class="{{ Request::routeIs('wheretostart.*') ? 'active-page' : '' }}">Where to Start</a></li>
+			<li><a href="{{ route('article.index') }}" class="{{ Request::routeIs('article.*') ? 'active-page' : '' }}">Articles</a></li>
+			<li><a href="{{ route('about.display') }}" class="{{ Request::routeIs('about.*') ? 'active-page' : '' }}">About</a></li>
 			@if (Auth::guest())
 			<li><a href="/login" class="login" aria-current="page">Login</a></li>
 			@else

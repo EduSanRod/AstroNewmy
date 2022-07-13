@@ -28,7 +28,7 @@
 
 <body>
 	<header>
-		<a href="home">
+		<a href="/home">
 			<img src="/imagenes/iconos/mainLogo.PNG" alt="Main logo website" height="60px">
 		</a>
 

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\Article;
 use App\Models\Comment;
 use App\Models\Equipment;
@@ -57,7 +58,6 @@ class ArticleController extends Controller
         $articleData = array();
         $articleData["article_title"] = $request->input('article_title');
         $articleData["article_description"] = $request->input('article_description');
-        $articleData["article_source"] = $request->input('article_source');
         $articleData["article_user_id"] = $request->input('article_user_id');
         $articleData["article_slug"] = $this->generateRandomString();
 
@@ -73,6 +73,8 @@ class ArticleController extends Controller
         //Store in database the path to the image
         $articleData["article_image"] = $pathToSaveFile;
 
+        //------------------//
+
         //Create the new information with the stored information
         $this->createArticle($articleData);
         $article = DB::getPdo()->lastInsertId();
@@ -80,7 +82,7 @@ class ArticleController extends Controller
         //Create equipment
 
         //Check if the article has any equipment to add
-        for ($i = 1; $i <= 5; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             if ($request->filled('equipment_name_' . $i)) {
                 //There is an input $equipment_name, so add all the fields.
                 $equipmentData = array();
@@ -130,9 +132,29 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($articleId)
     {
-        //
+        $previousArticleData = $this->getArticle($articleId);
+        $userId = Auth::id();
+
+        if($userId != $previousArticleData->article_user_id){
+            //Verify that the user logued is the same as the author of the article
+            return redirect()->route('article.index');
+        }
+
+        //Get the data from the Article
+
+        $articleData = $this->getArticle($articleId);
+
+        //Get the equipments from the article.
+
+        $equipmentsFromArticle = $this->getEquipmentsFromArticle($articleId);
+
+        return view("article/edit", [
+            "article" => $articleData,
+            "equipments" => $equipmentsFromArticle,
+
+        ]);
     }
 
     /**
@@ -142,9 +164,76 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $articleId)
     {
-        //
+        $previousArticleData = $this->getArticle($articleId);
+        $userId = Auth::id();
+
+        if($userId != $previousArticleData->article_user_id){
+            //Verify that the user logued is the same as the author of the article
+            return redirect()->route('article.index');
+        }
+        
+
+        //Update the data from article
+
+        $articleData = array();
+        $articleData["article_title"] = $request->input('article_title');
+        $articleData["article_description"] = $request->input('article_description');
+
+        //-------- Store image ----------//
+
+        if(is_uploaded_file($_FILES['article_image']['tmp_name'])){
+            //New image has been uploaded, delete the previous image.
+            unlink($previousArticleData->article_image);
+
+            //Define the image name and path /imagenes/article/<image-name>.jpg
+            $pathToSaveFile = $previousArticleData->article_image;
+
+            // Move the file to the proper folder
+            move_uploaded_file($_FILES['article_image']['tmp_name'], $pathToSaveFile);
+
+            //Store in database the path to the image
+            $articleData["article_image"] = $pathToSaveFile;
+            echo $_FILES['article_image']['size'];
+            echo $_FILES['article_image']['error'];
+        }
+        
+        //------------------//
+
+        $this->updateArticle($articleId, $articleData);
+
+        //To prevent keeping information that should be deleted related to article & equipment, delete all the information and re-create it
+
+        //Delete the equipment related to the article
+
+        $this->deleteEquipmentFromArticle($articleId);
+
+        //Create the new equipment related to the article
+
+        //Check if the article has any equipment to add
+        for ($i = 0; $i < 5; $i++) {
+            if ($request->filled('equipment_name_' . $i)) {
+                //There is an input $equipment_name, so add all the fields.
+                $equipmentData = array();
+                $equipmentData['equipment_name'] = $request->input('equipment_name_' . $i);
+                $equipmentData['equipment_type'] = $request->input('equipment_type_' . $i);
+
+                //Create the equipment
+                $this->createEquipment($equipmentData);
+                $equipment = DB::getPdo()->lastInsertId();
+
+                //add the equipment-article relationship table entry
+                $data = array();
+                $data["article_id"] = $previousArticleData->article_id;
+                $data["equipment_id"] = $equipment;
+
+                $this->createArticleEquipment($data);
+            }
+        }
+
+        //Return to the article index
+        return redirect()->route('article.index');
     }
 
     /**
@@ -153,9 +242,9 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy()
     {
-        //
+        return redirect()->route('article.index');
     }
 
     //------------ Query Functions ------------//
@@ -203,16 +292,11 @@ class ArticleController extends Controller
     {
         $equipment = Article::join('articleequipment', 'article.id', '=', 'articleequipment.article_id')
             ->join('equipment', 'articleequipment.equipment_id', '=', 'equipment.id')
-            ->select('equipment.name as equipment_name', 'equipment.type as equipment_type')
+            ->select('equipment.id as equipment_id', 'equipment.name as equipment_name', 'equipment.type as equipment_type')
             ->where('article.id', $articleId)
             ->get();
 
         return $equipment;
-    }
-
-    public function generateRandomString($length = 16)
-    {
-        return substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length / strlen($x)))), 1, $length);
     }
 
     public function createArticle($articleData)
@@ -227,6 +311,39 @@ class ArticleController extends Controller
             "source" => $articleData["article_source"],
             "celestial_object_id" => null,
         ]);
+    }
+
+    public function updateArticle($articleId, $articleData)
+    {
+        if (in_array("article_image", $articleData)){
+            Article::where('id', $articleId)
+            ->update([
+                "title" => $articleData["article_title"],
+                "description" => $articleData["article_description"],
+                "image" => $articleData["article_image"],
+            ]);
+        }
+        else{
+            Article::where('id', $articleId)
+            ->update([
+                "title" => $articleData["article_title"],
+                "description" => $articleData["article_description"],
+            ]);
+        }
+        
+    }
+
+    public function deleteEquipmentFromArticle($articleId)
+    {
+
+        $equipments = $this->getEquipmentsFromArticle($articleId);
+
+        ArticleEquipment::where('article_id', $articleId)->delete();
+
+        foreach($equipments as $equipment){
+            Equipment::where('id', $equipment->equipment_id)->delete();
+        }
+        
     }
 
     public function createEquipment($equipmentData)
@@ -245,5 +362,10 @@ class ArticleController extends Controller
             "article_id" => $data["article_id"],
             "equipment_id" => $data["equipment_id"],
         ]);
+    }
+
+    public function generateRandomString($length = 16)
+    {
+        return substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length / strlen($x)))), 1, $length);
     }
 }

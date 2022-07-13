@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Article extends Model
 {
+    public $timestamps = false;
+    
     /**
      * The table associated with the model.
      * 

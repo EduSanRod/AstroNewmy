@@ -24,8 +24,6 @@
 		<label for="article_description">Description (optional)</label>
 		<textarea id="article_description" name="article_description" rows="5"></textarea>
 
-		<input type="hidden" name="article_user_id" value="{{ Auth::user()->id; }}">
-
 		<div id="equipment-form-container">
 		</div>
 

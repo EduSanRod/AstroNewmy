@@ -48,7 +48,7 @@ Route::get("/where-to-start", [WhereToStartController::class, 'index'])->name('w
 
 //----------- Article & Comments Routes ----------//
 Route::resource('article', ArticleController::class);
-Route::get("/create-comment", [CommentController::class, 'addComment'])->name('article.create-comment');
+Route::get("/create-comment/{articleId}", [CommentController::class, 'addComment'])->name('article.create-comment');
 
 //----------- About Routes ----------//
 Route::get("/about", [AboutController::class, 'displayAbout'])->name('about.display');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Article;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
 
 use App\Models\Article;
 use App\Models\Comment;
@@ -12,12 +13,12 @@ use DateTime;
 
 class CommentController extends Controller
 {
-    public function addComment(Request $request){
+    public function addComment($articleId, Request $request){
 
         date_default_timezone_set('Europe/Madrid');
         $comment_text = $request->input('comment_text');
-        $user_id = $request->input('user_id');
-        $article_id = $request->input('article_id');
+        $user_id = Session::get('UserId');
+        $article_id = $articleId;
         $now = new DateTime();
         $date = $now->format('H:i d/m/Y');
 

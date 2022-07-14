@@ -37,6 +37,14 @@ form{
 	margin: 0px 0px 20px;
 }
 
+label{
+	font-size: 2rem;
+}
+
+h3{
+	margin: 20px 0px 20px;
+}
+
 .submit-button{
 	padding: 8px 15px 8px;
 	font-size: 2rem;
@@ -45,6 +53,7 @@ form{
 	border: none;
 	border-radius: 25px;
 	margin: 10px;
+	box-shadow: 5px 5px 8px rgba(0, 0, 0, 0.3);
 }
 
 .delete-button{
@@ -56,6 +65,7 @@ form{
 	border: none;
 	border-radius: 25px;
 	opacity: 0.75;
+	box-shadow: 5px 5px 8px rgba(0, 0, 0, 0.3);
 }
 
 .delete-button:hover{

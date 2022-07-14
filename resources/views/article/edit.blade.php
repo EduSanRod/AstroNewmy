@@ -25,8 +25,6 @@
 		<label for="article_description">Description (optional)</label>
 		<textarea id="article_description" name="article_description" rows="5" value="{{ $article->article_description }}"></textarea>
 
-		<input type="hidden" name="article_user_id" value="{{ Auth::user()->id; }}">
-
 		<div id="equipment-form-container">
 			@foreach ($equipments as $key=>$equipment)
 			<div id="div_container_{{ $key }}" class="equipment-container">

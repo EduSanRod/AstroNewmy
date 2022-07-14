@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+
 use App\Models\Article;
 use App\Models\Comment;
 use App\Models\Equipment;
@@ -58,7 +60,7 @@ class ArticleController extends Controller
         $articleData = array();
         $articleData["article_title"] = $request->input('article_title');
         $articleData["article_description"] = $request->input('article_description');
-        $articleData["article_user_id"] = $request->input('article_user_id');
+        $articleData["article_user_id"] = Session::get('UserId');
         $articleData["article_slug"] = $this->generateRandomString();
 
         //-------- Store image ----------//

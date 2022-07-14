@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Login;
 use Illuminate\Http\Request; 
 use App\Http\Controllers\Controller;
 use Auth;
-
+use Illuminate\Support\Facades\Session;
  
 class AuthController extends Controller
 {
+
     /**
      * Handle an authentication attempt.
      *
@@ -20,6 +21,9 @@ class AuthController extends Controller
         $password = $request->input('password');
 
         if (Auth::attempt(['email' => $email, 'password' => $password])) {
+            //Create session variable with the id of the user
+            Session::put('UserId', auth()->user()->id);
+            
             return redirect()->route('home.display');
         }
         else{

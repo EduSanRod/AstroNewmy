@@ -51,11 +51,8 @@
 
 	@if (!Auth::guest())
 	<article class="add-comment-container">
-		<form class="form-add-comment" action="{{ route('article.create-comment') }}">
+		<form class="form-add-comment" action="{{ route('article.create-comment', $article->article_id) }}">
 			<textarea name="comment_text" id="comment_text" rows="4" placeholder="Write a comment..."></textarea>
-
-			<input type="hidden" name="user_id" value="{{ Auth::user()->id; }}">
-			<input type="hidden" name="article_id" value="{{ $article->article_id }}">
 
 			<button type="submit" maxlength="255">Comment</button>
 		</form>

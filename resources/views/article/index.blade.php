@@ -28,22 +28,59 @@
 				<img src="{{ $article->article_image }}" alt="{{ $article->article_description }}">
 			</a>
 		</div>
-		<div class="button-continer">
-			<button class="button-upvote">
+		@if (Auth::check())
+		<div class="button-container">
+			<button type="button">
 				<span class="material-symbols-outlined">thumb_up</span>
-				<span class="border-right vote"><strong>123</strong></span>
+				<span class="border-right vote">123</span>
 			</button>
 
-			<button class="button-comment">
-				<span class="material-symbols-outlined">comment</span>
-				<span class="border-right vote"><strong>123</strong></span>
-			</button>
-
-			<button class="button-downvote">
+			<button type="button">
 				<span class="material-symbols-outlined">thumb_down</span>
-				<span class="border-right vote"><strong>123</strong></span>
+				<span class="border-right vote">123</span>
+			</button>
+
+			<button type="button">
+				<span class="material-symbols-outlined">comment</span>
+				<span class="border-right vote">123</span>
+			</button>
+
+			<button type="button">
+				<span class="material-symbols-outlined">favorite</span>
+			</button>
+
+			<div class="dropdown more-options">
+				<button class="dropbtn "><span class="material-symbols-outlined">more_horiz</span></button>
+				<div class="dropdown-content">
+					@if( Auth::user()->id == $article->article_user_id)
+					<a href="{{ route('article.edit', ['article'=>$article->article_id]) }}">Update Article</a>
+					@endif
+					<a href="{{ route('user.setting') }}">Report</a>
+				</div>
+			</div>
+		</div>
+		@else
+		<div class="button-container">
+			<button type="button" class="modal-login">
+				<span class="material-symbols-outlined">thumb_up</span>
+				<span class="border-right vote">123</span>
+			</button>
+
+			<button type="button" class="modal-login">
+				<span class="material-symbols-outlined">thumb_down</span>
+				<span class="border-right vote">123</span>
+			</button>
+
+			<button type="button" class="modal-login">
+				<span class="material-symbols-outlined">comment</span>
+				<span class="border-right vote">123</span>
+			</button>
+
+			<button type="button" class="modal-login">
+				<span class="material-symbols-outlined">favorite</span>
 			</button>
 		</div>
+		@endif
 	</article>
 	@endforeach
 </section>

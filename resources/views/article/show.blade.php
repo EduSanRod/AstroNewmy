@@ -15,23 +15,59 @@
 		<h2>{{ $article->article_title }}</h2>
 
 		<img src="/{{ $article->article_image }}" alt="{{ $article->article_description }}">
-
-		<div class="post-buttons">
-			<button type="button" class="button-upvote">
+		@if (Auth::check())
+		<div class="button-container">
+			<button type="button">
 				<span class="material-symbols-outlined">thumb_up</span>
-				<span class="vote">123</span>
+				<span class="border-right vote">123</span>
 			</button>
 
-			<button type="button" class="button-comment">
-				<span class="material-symbols-outlined">comment</span>
-				<span class="vote">123</span>
-			</button>
-
-			<button type="button" class="button-downvote">
+			<button type="button">
 				<span class="material-symbols-outlined">thumb_down</span>
-				<span class="vote">123</span>
+				<span class="border-right vote">123</span>
+			</button>
+
+			<button type="button">
+				<span class="material-symbols-outlined">comment</span>
+				<span class="border-right vote">123</span>
+			</button>
+
+			<button type="button">
+				<span class="material-symbols-outlined">favorite</span>
+			</button>
+
+			<div class="dropdown more-options">
+				<button class="dropbtn "><span class="material-symbols-outlined">more_horiz</span></button>
+				<div class="dropdown-content">
+					@if( Auth::user()->id == $article->article_user_id)
+					<a href="{{ route('article.edit', ['article'=>$article->article_id]) }}">Update Article</a>
+					@endif
+					<a href="{{ route('user.setting') }}">Report</a>
+				</div>
+			</div>
+		</div>
+		@else
+		<div class="button-container">
+			<button type="button" class="modal-login">
+				<span class="material-symbols-outlined">thumb_up</span>
+				<span class="border-right vote">123</span>
+			</button>
+
+			<button type="button" class="modal-login">
+				<span class="material-symbols-outlined">thumb_down</span>
+				<span class="border-right vote">123</span>
+			</button>
+
+			<button type="button" class="modal-login">
+				<span class="material-symbols-outlined">comment</span>
+				<span class="border-right vote">123</span>
+			</button>
+
+			<button type="button" class="modal-login">
+				<span class="material-symbols-outlined">favorite</span>
 			</button>
 		</div>
+		@endif
 
 
 
@@ -66,15 +102,15 @@
 			<h3 class="comment-author">{{ $comment->comment_author }} </h3>
 			<p class="comment-timestamp">{{ $comment->comment_created_at }}</p>
 			<p class="comment-text">{{ $comment->comment_comment_text }}</p>
-			<div class="comment-buttons">
-				<button type="button" class="button-upvote">
+			<div class="button-container">
+				<button type="button">
 					<span class="material-symbols-outlined">thumb_up</span>
-					<span class="vote">123</span>
+					<span class="border-right vote">123</span>
 				</button>
 
-				<button type="button" class="button-downvote">
+				<button type="button">
 					<span class="material-symbols-outlined">thumb_down</span>
-					<span class="vote">123</span>
+					<span class="border-right vote">123</span>
 				</button>
 			</div>
 		</article>

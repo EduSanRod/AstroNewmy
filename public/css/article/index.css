@@ -9,12 +9,15 @@ a:hover {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+
+	max-width: 750px;
+	margin: 0 auto;
 }
 
 /*----- Articles -----*/
 
 article {
-	width: 50%;
+	width: 100%;
 	margin: 25px 0px 50px;
 }
 
@@ -36,23 +39,41 @@ img {
 		'opsz' 48
 }
 
-.button-continer > button{
-	outline: none;
-	padding: 3px 5px 3px;
-	margin: 5px;
+.button-container{
+	margin: 20px 0px 20px;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	gap: 15px;
+	padding: 2px 10px 10px;
+}
+
+.button-container > button{
+	padding: 5px 8px 5px;
+	background-color: white;
 	border-radius: 5px;
+	border: 1px solid #aaa;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 5px;
 }
 
-.button-continer > .button-upvote{
-	border: 1px solid green;
+.button-container > button:hover{
+	background-color: #eee;
 }
 
-.button-continer > .button-comment{
-	border: 1px solid black;
+.button-container > .more-options{
+	margin-left: auto;
 }
 
-.button-continer > .button-downvote{
-	border: 1px solid red;
+.button-container > .dropdown> .dropbtn{
+	padding: 5px 5px 5px;
+	aspect-ratio: 1/1;
+	border-radius: 100%;
+	border: 1px solid #aaa;
+	background-color: white;
 }
 
 @media only screen and (max-width: 840px) {

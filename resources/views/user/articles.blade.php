@@ -26,38 +26,39 @@
 </nav>
 
 <section id="articles-container">
-	@foreach($articles as $article)
+	@foreach($articles as $key=>$article)
 	<article>
 		<a href="{{ route('article.show', ['article'=>$article->article_id]) }}" target="_blank">
 			<div>
 				<h2>{{ $article->article_title }}</h2>
 			</div>
 			<div>
-				<img src="/{{ $article->article_image }}" alt="{{ $article->article_description }}">
+			<img src="/{{ $article->article_image }}" alt="{{ $article->article_description }}" loading="{{ $key <= 3 ? "eager" : "lazy" }}">
 			</div>
 		</a>
+		@if (Auth::check())
 		<div class="button-container">
 			<button type="button">
-				<span class="material-symbols-outlined">thumb_up</span>
+				<img src="/imagenes/iconos/thumb_up.svg" alt="Upvote" height="25px" width="25px">
 				<span class="border-right vote">123</span>
 			</button>
 
 			<button type="button">
-				<span class="material-symbols-outlined">thumb_down</span>
+				<img src="/imagenes/iconos/thumb_down.svg" alt="Downvote" height="25px" width="25px">
 				<span class="border-right vote">123</span>
 			</button>
 
 			<button type="button">
-				<span class="material-symbols-outlined">comment</span>
+				<img src="/imagenes/iconos/comment.svg" alt="Comment" height="25px" width="25px">
 				<span class="border-right vote">123</span>
 			</button>
 
 			<button type="button">
-				<span class="material-symbols-outlined">favorite</span>
+				<img src="/imagenes/iconos/favourite.svg" alt="Add as favourite" height="25px" width="25px">
 			</button>
 
 			<div class="dropdown more-options">
-				<button class="dropbtn "><span class="material-symbols-outlined">more_horiz</span></button>
+				<button class="dropbtn "><img src="/imagenes/iconos/more.svg" alt="More options" height="25px" width="25px"></button>
 				<div class="dropdown-content">
 					@if( Auth::user()->id == $article->article_user_id)
 					<a href="{{ route('article.edit', ['article'=>$article->article_id]) }}">Update Article</a>
@@ -66,6 +67,28 @@
 				</div>
 			</div>
 		</div>
+		@else
+		<div class="button-container">
+		<button type="button">
+				<img src="/imagenes/iconos/thumb_up.svg" alt="Upvote" height="25px" width="25px">
+				<span class="border-right vote">123</span>
+			</button>
+
+			<button type="button">
+				<img src="/imagenes/iconos/thumb_down.svg" alt="Downvote" height="25px" width="25px">
+				<span class="border-right vote">123</span>
+			</button>
+
+			<button type="button">
+				<img src="/imagenes/iconos/comment.svg" alt="Comment" height="25px" width="25px">
+				<span class="border-right vote">123</span>
+			</button>
+
+			<button type="button">
+				<img src="/imagenes/iconos/favourite.svg" alt="Add as favourite" height="25px" width="25px">
+			</button>
+		</div>
+		@endif
 	</article>
 
 	<hr>

@@ -2,9 +2,7 @@
 
 @section('head')
 
-<title>AstroNewmy Home</title>
-
-<link rel="stylesheet" href="https://fonts.sandbox.google.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<title>AstroNewmy | Articles</title>
 <link rel="stylesheet" type="text/css" href="{{ asset('css/article/index.css') }}">
 
 @endsection
@@ -15,42 +13,42 @@
 	@if (!Auth::guest())
 	<div id="button-add-article">
 		<a href="{{ route('article.create') }}">
-			<span class="material-symbols-outlined">add</span>
+			<img src="/imagenes/iconos/add_box.svg" alt="Add new Article" height="35px" width="35px">
 		</a>
 	</div>
 	@endif
 
-	@foreach($articles as $article)
+	@foreach($articles as $key=>$article)
 	<article class="article-container">
 		<div class="post-continer">
 			<a href="{{ route('article.show', ['article'=>$article->article_id]) }}" target="_blank">
 				<p>{{ $article->article_title }}</p>
-				<img src="{{ $article->article_image }}" alt="{{ $article->article_description }}">
+				<img src="{{ $article->article_image }}" alt="{{ $article->article_description }}" loading="{{ $key <= 3 ? "eager" : "lazy" }}">
 			</a>
 		</div>
 		@if (Auth::check())
 		<div class="button-container">
 			<button type="button">
-				<span class="material-symbols-outlined">thumb_up</span>
+				<img src="/imagenes/iconos/thumb_up.svg" alt="Upvote" height="25px" width="25px">
 				<span class="border-right vote">123</span>
 			</button>
 
 			<button type="button">
-				<span class="material-symbols-outlined">thumb_down</span>
+				<img src="/imagenes/iconos/thumb_down.svg" alt="Downvote" height="25px" width="25px">
 				<span class="border-right vote">123</span>
 			</button>
 
 			<button type="button">
-				<span class="material-symbols-outlined">comment</span>
+				<img src="/imagenes/iconos/comment.svg" alt="Comment" height="25px" width="25px">
 				<span class="border-right vote">123</span>
 			</button>
 
 			<button type="button">
-				<span class="material-symbols-outlined">favorite</span>
+				<img src="/imagenes/iconos/favourite.svg" alt="Add as favourite" height="25px" width="25px">
 			</button>
 
 			<div class="dropdown more-options">
-				<button class="dropbtn "><span class="material-symbols-outlined">more_horiz</span></button>
+				<button class="dropbtn "><img src="/imagenes/iconos/more.svg" alt="More options" height="25px" width="25px"></button>
 				<div class="dropdown-content">
 					@if( Auth::user()->id == $article->article_user_id)
 					<a href="{{ route('article.edit', ['article'=>$article->article_id]) }}">Update Article</a>
@@ -61,23 +59,23 @@
 		</div>
 		@else
 		<div class="button-container">
-			<button type="button" class="modal-login">
-				<span class="material-symbols-outlined">thumb_up</span>
+		<button type="button">
+				<img src="/imagenes/iconos/thumb_up.svg" alt="Upvote" height="25px" width="25px">
 				<span class="border-right vote">123</span>
 			</button>
 
-			<button type="button" class="modal-login">
-				<span class="material-symbols-outlined">thumb_down</span>
+			<button type="button">
+				<img src="/imagenes/iconos/thumb_down.svg" alt="Downvote" height="25px" width="25px">
 				<span class="border-right vote">123</span>
 			</button>
 
-			<button type="button" class="modal-login">
-				<span class="material-symbols-outlined">comment</span>
+			<button type="button">
+				<img src="/imagenes/iconos/comment.svg" alt="Comment" height="25px" width="25px">
 				<span class="border-right vote">123</span>
 			</button>
 
-			<button type="button" class="modal-login">
-				<span class="material-symbols-outlined">favorite</span>
+			<button type="button">
+				<img src="/imagenes/iconos/favourite.svg" alt="Add as favourite" height="25px" width="25px">
 			</button>
 		</div>
 		@endif

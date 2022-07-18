@@ -146,9 +146,11 @@ a:hover {
 
 .person-icon{
 	background-color: var(--main-color-light);
-	padding: 5px;
 	border-radius: 100%;
+	padding: 5px;
 	margin-right: 5px;
+	height: 35px;
+	width: 35px;
 }
 
 

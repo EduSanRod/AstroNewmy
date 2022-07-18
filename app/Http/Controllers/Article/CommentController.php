@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Article;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\Article;
 use App\Models\Comment;
@@ -14,6 +15,11 @@ use DateTime;
 class CommentController extends Controller
 {
     public function addComment($articleId, Request $request){
+
+        //Check if user is logged in
+        if (!Auth::check()) {
+            return redirect()->route('article.index');
+        }
 
         date_default_timezone_set('Europe/Madrid');
         $comment_text = $request->input('comment_text');

@@ -48,22 +48,22 @@
 		</div>
 		@else
 		<div class="button-container">
-		<button type="button">
+			<button type="button" onclick="showModal()">
 				<img src="/imagenes/iconos/thumb_up.svg" alt="Upvote" height="25px" width="25px">
 				<span class="border-right vote">123</span>
 			</button>
 
-			<button type="button">
+			<button type="button" onclick="showModal()">
 				<img src="/imagenes/iconos/thumb_down.svg" alt="Downvote" height="25px" width="25px">
 				<span class="border-right vote">123</span>
 			</button>
 
-			<button type="button">
+			<button type="button" onclick="showModal()">
 				<img src="/imagenes/iconos/comment.svg" alt="Comment" height="25px" width="25px">
 				<span class="border-right vote">123</span>
 			</button>
 
-			<button type="button">
+			<button type="button" onclick="showModal()">
 				<img src="/imagenes/iconos/favourite.svg" alt="Add as favourite" height="25px" width="25px">
 			</button>
 		</div>
@@ -120,6 +120,41 @@
 		@endif
 	</article>
 </article>
+
+<div id="login-modal" class="modal">
+	
+	<div class="modal-content">
+		<span onclick="hideModal()" class="close" title="Close Modal">×</span>
+		<p>To rate a post or save it to favourites you will need to Login first.</p>
+		<div>
+			<a href="{{ route('login.index') }}" title="Log in">
+				Login in
+			</a>
+
+			<p>New to the site? <a href="{{ route('login.create-form') }}" title="Register">Register</a></p>
+		</div>
+	</div>
+</div>
+
+<script>
+	// Get the modal
+	var modal = document.getElementById('login-modal');
+
+	function hideModal(){
+		modal.style.display = "none";
+	}
+
+	function showModal(){
+		modal.style.display = "flex";
+	}
+
+	// When the user clicks anywhere outside of the modal, close it
+	window.onclick = function(event) {
+		if (event.target == modal) {
+			modal.style.display = "none";
+		}
+	}
+</script>
 
 
 

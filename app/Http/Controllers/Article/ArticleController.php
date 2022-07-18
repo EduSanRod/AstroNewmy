@@ -45,6 +45,11 @@ class ArticleController extends Controller
      */
     public function create()
     {
+        //Check if user is logged in
+        if (!Auth::check()) {
+            return redirect()->route('article.index');
+        }
+
         return view("article/create");
     }
 
@@ -56,6 +61,10 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
+        //Check if user is logged in
+        if (!Auth::check()) {
+            return redirect()->route('article.index');
+        }
 
         //Get all the information from the form
 
@@ -147,6 +156,12 @@ class ArticleController extends Controller
      */
     public function edit($articleId)
     {
+
+        //Check if user is logged in
+        if (!Auth::check()) {
+            return redirect()->route('article.index');
+        }
+
         $previousArticleData = $this->getArticle($articleId);
         $userId = Auth::id();
 
@@ -179,6 +194,11 @@ class ArticleController extends Controller
      */
     public function update(Request $request, $articleId)
     {
+        //Check if user is logged in
+        if (!Auth::check()) {
+            return redirect()->route('article.index');
+        }
+        
         $previousArticleData = $this->getArticle($articleId);
         $userId = Auth::id();
 

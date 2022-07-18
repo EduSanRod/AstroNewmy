@@ -56,12 +56,20 @@ class LoginController extends Controller
 
     public function showUserSetting()
     {
+        //Check if user is logged in
+        if (!Auth::check()) {
+            return redirect()->route('article.index');
+        }
 
         return view("user/setting");
     }
 
     public function userUpdate(Request $request)
     {
+        //Check if user is logged in
+        if (!Auth::check()) {
+            return redirect()->route('article.index');
+        }
 
         if (url()->previous() !=  url('user/settings') && url()->previous() !=  url('user/update')) {
             return redirect()->to('/home');
@@ -138,6 +146,10 @@ class LoginController extends Controller
 
     public function userDelete()
     {
+        //Check if user is logged in
+        if (!Auth::check()) {
+            return redirect()->route('article.index');
+        }
 
         //To prevent the user from writing the route /user/delete and deleting its own account, only delete if the previous route is the settings
         if (url()->previous() !=  url('user/settings')) {
@@ -157,6 +169,10 @@ class LoginController extends Controller
 
     public function showUserArticles()
     {
+        //Check if user is logged in
+        if (!Auth::check()) {
+            return redirect()->route('article.index');
+        }
 
         $userId = auth()->user()->id;
         $articles = $this->getAllArticlesFromUser($userId);
@@ -168,7 +184,11 @@ class LoginController extends Controller
 
     public function showUserComments()
     {
-
+        //Check if user is logged in    
+        if (!Auth::check()) {
+            return redirect()->route('article.index');
+        }
+        
         $userId = auth()->user()->id;
         $articles = $this->getAllArticlesWithCommentsFromUser($userId);
 

@@ -193,10 +193,74 @@ textarea{
 	display: inline-block;
 }
 
-
-
 .comment-text{
 	font-size: 1.75rem;
+}
+
+/*----- Modal -----*/
+
+.modal {
+	position: fixed; /* Stay in place */
+	z-index: 1; /* Sit on top */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	background-color:rgba(192,192,192,0.5);
+
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.modal-content {
+	background-color: #fefefe;
+	margin: 15% auto 15% auto;
+	border: 1px solid #888;
+	width: 30%; 
+	height: 30%;
+}
+
+.close{
+	margin: 10px;
+	color: black;
+}
+
+.modal-content > p {
+	font-size: calc(2rem);
+	font-family: 'Roboto', sans-serif;
+	text-align: center;
+	padding: 50px 20px 0px;
+}
+
+.modal-content > div {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	gap: 50px;
+	margin-top: 50px;
+
+}
+
+.modal-content > div > a {
+	font-size: calc(1.5em);
+	font-weight: 700;
+	font-family: 'Roboto', sans-serif;
+	padding: 10px 20px 10px;
+	border-radius: 25px;
+	background-color: var(--main-color);
+	color: var(--color-white);
+	width: fit-content;
+}
+
+.modal-content > div > p {
+	font-size: calc(1.3em);
+}
+
+.modal-content > div > p > a {
+	color: var(--main-color);
 }
 
 @media only screen and (max-width: 840px) {

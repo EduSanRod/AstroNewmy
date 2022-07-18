@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
+use Image;
+
 use App\Models\Article;
 use App\Models\Comment;
 use App\Models\Equipment;
@@ -67,13 +69,22 @@ class ArticleController extends Controller
 
         //Define the image name and path /imagenes/article/<image-name>.jpg
         $imageName = $articleData["article_slug"] . ".jpg";
-        $pathToSaveFile = 'imagenes/article/' . $imageName;
+        $pathToSaveFileOriginal = 'imagenes/article/original/' . $imageName;
+        $pathToSaveFileResized = 'imagenes/article/standarized/' . $imageName;
 
-        // Move the file to the proper folder
-        move_uploaded_file($_FILES['article_image']['tmp_name'], $pathToSaveFile);
+        //Make a copy of the image to resize it to be 750px of width (so the image is not too large to slow down the web)
+        $resizedImage = Image::make($_FILES['article_image']['tmp_name']); 
+        $resizedImage->resize(750, null, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        $resizedImage->save(public_path($pathToSaveFileResized));
+        
+
+        // Move the original file to the proper original folder
+        move_uploaded_file($_FILES['article_image']['tmp_name'], $pathToSaveFileOriginal);
 
         //Store in database the path to the image
-        $articleData["article_image"] = $pathToSaveFile;
+        $articleData["article_image"] = $articleData["article_slug"] . ".jpg";
 
         //------------------//
 
@@ -187,18 +198,25 @@ class ArticleController extends Controller
 
         if(is_uploaded_file($_FILES['article_image']['tmp_name'])){
             //New image has been uploaded, delete the previous image.
-            unlink($previousArticleData->article_image);
+            unlink("imagenes/article/original/". $previousArticleData->article_image);
+            unlink("imagenes/article/standarized/". $previousArticleData->article_image);
 
             //Define the image name and path /imagenes/article/<image-name>.jpg
-            $pathToSaveFile = $previousArticleData->article_image;
+            $pathToSaveFileOriginal = "imagenes/article/original/". $previousArticleData->article_image;
+            $pathToSaveFileResized = "imagenes/article/standarized/". $previousArticleData->article_image;
+
+            //Make a copy of the image to resize it to be 750px of width (so the image is not too large to slow down the web)
+            $resizedImage = Image::make($_FILES['article_image']['tmp_name']); 
+            $resizedImage->resize(750, null, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+            $resizedImage->save(public_path($pathToSaveFileResized));
 
             // Move the file to the proper folder
-            move_uploaded_file($_FILES['article_image']['tmp_name'], $pathToSaveFile);
+            move_uploaded_file($_FILES['article_image']['tmp_name'], $pathToSaveFileOriginal);
 
             //Store in database the path to the image
-            $articleData["article_image"] = $pathToSaveFile;
-            echo $_FILES['article_image']['size'];
-            echo $_FILES['article_image']['error'];
+            $articleData["article_image"] = $previousArticleData->article_image;
         }
         
         //------------------//
@@ -310,7 +328,6 @@ class ArticleController extends Controller
             "description" => $articleData["article_description"],
             "image" => $articleData["article_image"],
             "user_id" => $articleData["article_user_id"],
-            "source" => $articleData["article_source"],
             "celestial_object_id" => null,
         ]);
     }

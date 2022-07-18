@@ -33,7 +33,7 @@
 				<h2>{{ $article->article_title }}</h2>
 			</div>
 			<div>
-			<img src="/{{ $article->article_image }}" alt="{{ $article->article_description }}" loading="{{ $key <= 3 ? "eager" : "lazy" }}">
+			<img src="/imagenes/article/original/{{ $article->article_image }}" alt="{{ $article->article_description }}" loading="{{ $key <= 3 ? "eager" : "lazy" }}">
 			</div>
 		</a>
 		@if (Auth::check())

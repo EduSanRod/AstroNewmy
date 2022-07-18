@@ -14,7 +14,7 @@
 	<article class="post-content">
 		<h2>{{ $article->article_title }}</h2>
 
-		<img src="/{{ $article->article_image }}" alt="{{ $article->article_description }}">
+		<img src="/imagenes/article/original/{{ $article->article_image }}" alt="{{ $article->article_description }}">
 		@if (Auth::check())
 		<div class="button-container">
 			<button type="button">

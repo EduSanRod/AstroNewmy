@@ -23,7 +23,7 @@
 		<div class="post-continer">
 			<a href="{{ route('article.show', ['article'=>$article->article_id]) }}" target="_blank">
 				<p>{{ $article->article_title }}</p>
-				<img src="{{ $article->article_image }}" alt="{{ $article->article_description }}" loading="{{ $key <= 3 ? "eager" : "lazy" }}">
+				<img src="/imagenes/article/standarized/{{ $article->article_image }}" alt="{{ $article->article_description }}" loading="{{ $key <= 3 ? "eager" : "lazy" }}">
 			</a>
 		</div>
 		@if (Auth::check())

@@ -2,7 +2,7 @@
 
 @section('head')
 
-<title>{{ Auth::user()->name; }}'s Comments</title>
+<title>{{ Auth::user()->name; }}'s Favourite Articles</title>
 
 <link rel="stylesheet" type="text/css" href="{{ asset('css/user/articles.css') }}">
 

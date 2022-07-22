@@ -2,7 +2,7 @@
 
 @section('head')
 
-<title>{{ Auth::user()->name; }} Articles</title>
+<title>{{ Auth::user()->name; }}'s Articles</title>
 
 <link rel="stylesheet" type="text/css" href="{{ asset('css/user/articles.css') }}">
 
@@ -19,7 +19,7 @@
 			<a href="{{ route('user.comments') }}" class="{{ Request::routeIs('user.comments') ? 'active-page' : '' }}" title="My Comments"><span>Comments</span></a>
 		</li>
 		<li>
-			<a href="#" class="{{ Request::routeIs('user.saved-articles') ? 'active-page' : '' }}" title="Saved Articles"><span>Saved Articles</span></a>
+			<a href="{{ route('user.favourites') }}" class="{{ Request::routeIs('user.favourites') ? 'active-page' : '' }}" title="Saved Articles"><span>Saved Articles</span></a>
 		</li>
 	</ul>
 
@@ -50,12 +50,17 @@
 
 			<button type="button">
 				<img src="/imagenes/iconos/comment.svg" alt="Comment" height="25px" width="25px">
-				<span class="border-right vote">123</span>
+				<span class="border-right vote">{{ $article->number_comments }}</span>
 			</button>
-
-			<button type="button">
-				<img src="/imagenes/iconos/favourite.svg" alt="Add as favourite" height="25px" width="25px">
-			</button>
+			@if ($article->check_favourite)
+				<button type="button" class="button-favourite" data-id="{{ $article->article_id }}">
+					<img src="/imagenes/iconos/favourite-active.svg" alt="Add as favourite" height="25px" width="25px">
+				</button>
+			@else
+				<button type="button" class="button-unfavourite" data-id="{{ $article->article_id }}">
+					<img src="/imagenes/iconos/favourite-unactive.svg" alt="Add as favourite" height="25px" width="25px">
+				</button>
+			@endif
 
 			<div class="dropdown more-options">
 				<button class="dropbtn "><img src="/imagenes/iconos/more.svg" alt="More options" height="25px" width="25px"></button>
@@ -69,23 +74,23 @@
 		</div>
 		@else
 		<div class="button-container">
-		<button type="button">
+			<button type="button" onclick="showModal()">
 				<img src="/imagenes/iconos/thumb_up.svg" alt="Upvote" height="25px" width="25px">
 				<span class="border-right vote">123</span>
 			</button>
 
-			<button type="button">
+			<button type="button" onclick="showModal()">
 				<img src="/imagenes/iconos/thumb_down.svg" alt="Downvote" height="25px" width="25px">
 				<span class="border-right vote">123</span>
 			</button>
 
-			<button type="button">
+			<button type="button" onclick="showModal()">
 				<img src="/imagenes/iconos/comment.svg" alt="Comment" height="25px" width="25px">
-				<span class="border-right vote">123</span>
+				<span class="border-right vote">{{ $article->number_comments }}</span>
 			</button>
 
-			<button type="button">
-				<img src="/imagenes/iconos/favourite.svg" alt="Add as favourite" height="25px" width="25px">
+			<button type="button" onclick="showModal()">
+				<img src="/imagenes/iconos/favourite-unactive.svg" alt="Add as favourite" height="25px" width="25px">
 			</button>
 		</div>
 		@endif
@@ -94,5 +99,76 @@
 	<hr>
 	@endforeach
 </section>
+
+<script>
+	$.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+	$(document).on("click", ".button-unfavourite" , function(e) {
+
+		e.preventDefault();
+
+		var $this = $(this);
+		var articleId = $(this).data('id');
+		var url = "{{ route('article.saved-article') }}";
+
+		$.ajax({
+			url:url,
+			method:'POST',
+			data:{
+				articleId: articleId
+			},
+			success:function(response){
+				if(response.success){
+					//Change the src image from the button
+					$this.removeClass("button-unfavourite");
+					$this.addClass("button-favourite");
+
+					$this.find("img").attr("src", "/imagenes/iconos/favourite-active.svg")
+				}else{
+					alert("Error")
+				}
+			},
+			error:function(error){
+				console.log(error)
+			}
+		});
+	});
+
+	$(document).on("click", ".button-favourite" , function(e) {
+
+		e.preventDefault();
+
+		var $this = $(this);
+		var articleId = $(this).data('id');
+		var url = "{{ route('article.delete-saved-article') }}";
+
+		$.ajax({
+			url:url,
+			method:'DELETE',
+			data:{
+				articleId: articleId
+			},
+			success:function(response){
+				if(response.success){
+					//Change the src image from the button
+					$this.removeClass("button-favourite");
+					$this.addClass("button-unfavourite");
+
+					$this.find("img").attr("src", "/imagenes/iconos/favourite-unactive.svg")
+				}else{
+					alert("Error")
+				}
+			},
+			error:function(error){
+				console.log(error)
+			}
+		});
+	});
+
+</script>
 
 @endsection

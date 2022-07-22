@@ -7,6 +7,7 @@ use App\Http\Controllers\About\AboutController;
 use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\Article\CommentController;
+use App\Http\Controllers\Article\FavouriteArticlesController;
 use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\Login\AuthController;
 use App\Http\Controllers\WhereToStart\WhereToStartController;
@@ -35,6 +36,7 @@ Route::post('/user/update', [LoginController::class, 'userUpdate'])->name('user.
 Route::get('/user/delete', [LoginController::class, 'userDelete'])->name('user.delete');
 Route::get('/user/profile/articles', [LoginController::class, 'showUserArticles'])->name('user.articles');
 Route::get('/user/profile/comments', [LoginController::class, 'showUserComments'])->name('user.comments');
+Route::get('/user/profile/favourites', [LoginController::class, 'showUserFavourites'])->name('user.favourites');
 
 //----------- Home Routes ----------//
 Route::get("/home", [HomeController::class, 'displayHome'])->name('home.display');
@@ -49,6 +51,9 @@ Route::get("/where-to-start", [WhereToStartController::class, 'index'])->name('w
 //----------- Article & Comments Routes ----------//
 Route::resource('article', ArticleController::class);
 Route::get("/create-comment/{articleId}", [CommentController::class, 'addComment'])->name('article.create-comment');
+//--- Article Votes
+Route::post("/save-as-favourite", [FavouriteArticlesController::class, 'saveArticle'])->name('article.saved-article');
+Route::delete("/delete-from-favourite", [FavouriteArticlesController::class, 'deleteFromSavedArticle'])->name('article.delete-saved-article');
 
 //----------- About Routes ----------//
 Route::get("/about", [AboutController::class, 'displayAbout'])->name('about.display');

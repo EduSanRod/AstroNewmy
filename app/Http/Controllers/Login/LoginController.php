@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
+use App\Http\Controllers\Article\FavouriteArticlesController;
+
 use App\Models\User;
 use App\Models\Article;
 use App\Models\Comment;
@@ -109,20 +111,20 @@ class LoginController extends Controller
             //Check if any of the 3 fields is empty
             if (!isset($oldPassword) || !isset($newPassword) || !isset($confirmPassword)) {
                 $validatePasswordChange = FALSE;
-                $message = $message. "- The old password, the new password and the confirmation must be filled. \n";
+                $message = $message . "- The old password, the new password and the confirmation must be filled. \n";
             }
 
             //Check if the old password is the correct one
             $user = User::find(auth()->user()->id);
             if (!Hash::check($oldPassword, $user->password)) {
                 $validatePasswordChange = FALSE;
-                $message = $message. "- The old password does not match, try again. \n";
+                $message = $message . "- The old password does not match, try again. \n";
             }
 
             //Check if the new password and its confirmation are the same
             if ($newPassword != $confirmPassword) {
                 $validatePasswordChange = FALSE;
-                $message = $message. "- The new password and its confirmation does not match, try again. \n";
+                $message = $message . "- The new password and its confirmation does not match, try again. \n";
             }
 
             if ($validatePasswordChange) {
@@ -132,8 +134,7 @@ class LoginController extends Controller
                 ]);
 
                 return view("user/setting");
-            }
-            else{
+            } else {
                 //The process has encounter an error, return to the settings and display the error message.
                 return view("user/setting", [
                     "message" => $message,
@@ -177,6 +178,17 @@ class LoginController extends Controller
         $userId = auth()->user()->id;
         $articles = $this->getAllArticlesFromUser($userId);
 
+        $favouriteQuery = new FavouriteArticlesController();
+
+        foreach ($articles as $article) {
+            // Attribute to check if the article is saved as favourite
+            $checkfavourite = $favouriteQuery->checkSaveArticle($article->article_id);
+            $article->check_favourite = $checkfavourite;
+
+            // Attribute to check how many comments an article has
+            $article->number_comments = $this->getNumberOfCommentsFrom($article->article_id);
+        }
+
         return view("user/articles", [
             "articles" => $articles,
         ]);
@@ -188,11 +200,47 @@ class LoginController extends Controller
         if (!Auth::check()) {
             return redirect()->route('article.index');
         }
-        
+
         $userId = auth()->user()->id;
         $articles = $this->getAllArticlesWithCommentsFromUser($userId);
+        $favouriteQuery = new FavouriteArticlesController();
+
+        foreach ($articles as $article) {
+            // Attribute to check if the article is saved as favourite
+            $checkfavourite = $favouriteQuery->checkSaveArticle($article->article_id);
+            $article->check_favourite = $checkfavourite;
+
+            // Attribute to check how many comments an article has
+            $article->number_comments = $this->getNumberOfCommentsFrom($article->article_id);
+        }
 
         return view("user/comments", [
+            "articles" => $articles,
+        ]);
+    }
+
+    public function showUserFavourites()
+    {
+        //Check if user is logged in    
+        if (!Auth::check()) {
+            return redirect()->route('article.index');
+        }
+
+        $userId = auth()->user()->id;
+        $articles = $this->getAllFavouriteArticlesFromUser($userId);
+
+        $favouriteQuery = new FavouriteArticlesController();
+
+        foreach ($articles as $article) {
+            // Attribute to check if the article is saved as favourite
+            $checkfavourite = $favouriteQuery->checkSaveArticle($article->article_id);
+            $article->check_favourite = $checkfavourite;
+
+            // Attribute to check how many comments an article has
+            $article->number_comments = $this->getNumberOfCommentsFrom($article->article_id);
+        }
+
+        return view("user/favourites", [
             "articles" => $articles,
         ]);
     }
@@ -212,10 +260,28 @@ class LoginController extends Controller
         $celestialObjects = Article::join('comment', 'comment.article_id', '=', 'article.id')
             ->select("article.id as article_id", "article.title as article_title", "article.slug as article_slug", "article.description as article_description", "article.image as article_image", "article.user_id as article_user_id", "article.source as article_source", "article.celestial_object_id  as article_celestial_object_id ")
             ->where('comment.user_id', $userId)
-            ->orderBy('comment.created_at', 'ASC')
+            ->orderBy('comment.created_at', 'DESC')
             ->distinct()
             ->get();
 
         return $celestialObjects;
+    }
+
+    public function getAllFavouriteArticlesFromUser($userId)
+    {
+        $celestialObjects = Article::join('savedarticles', 'savedarticles.article_id', '=', 'article.id')
+            ->select("article.id as article_id", "article.title as article_title", "article.slug as article_slug", "article.description as article_description", "article.image as article_image", "article.user_id as article_user_id", "article.source as article_source", "article.celestial_object_id  as article_celestial_object_id ")
+            ->where('savedarticles.user_id', $userId)
+            ->orderBy('savedarticles.created_at', 'DESC')
+            ->distinct()
+            ->get();
+
+        return $celestialObjects;
+    }
+
+    public function getNumberOfCommentsFrom($article_id){
+        $numberOfComments = Comment::where('article_id', $article_id)->count();
+        
+        return $numberOfComments;
     }
 }

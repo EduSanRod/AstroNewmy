@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 use Image;
+use App\Http\Controllers\Article\FavouriteArticlesController;
 
 use App\Models\Article;
 use App\Models\Comment;
@@ -28,6 +29,17 @@ class ArticleController extends Controller
         if ($celestialObject == null) {
             //There is no filter for posts, show all of them.
             $articles = $this->getAllArticles();
+
+            $favouriteQuery = new FavouriteArticlesController();
+
+            foreach($articles as $article){
+                // Attribute to check if the article is saved as favourite
+                $checkfavourite = $favouriteQuery->checkSaveArticle($article->article_id);
+                $article->check_favourite = $checkfavourite;
+
+                // Attribute to check how many comments an article has
+                $article->number_comments = $this->getNumberOfCommentsFrom($article->article_id);
+            }
         } else {
             //There is a filter
             $articles = $this->getAllArticlesOf($celestialObject);
@@ -138,8 +150,17 @@ class ArticleController extends Controller
     {
 
         $article = $this->getArticle($articleId);
+
+        // Attribute to check if the article is saved as favourite
+        $favouriteQuery = new FavouriteArticlesController();
+        $checkfavourite = $favouriteQuery->checkSaveArticle($article->article_id);
+        $article->check_favourite = $checkfavourite;
+
         $comments = $this->getCommentsFromArticle($articleId);
         $equipments = $this->getEquipmentsFromArticle($articleId);
+
+        // Attribute to check how many comments an article has
+        $article->number_comments = $this->getNumberOfCommentsFrom($article->article_id);
 
         return view("article/show", [
             "article" => $article,
@@ -291,11 +312,17 @@ class ArticleController extends Controller
 
     public function getAllArticles()
     {
-        $celestialObjects = Article::select("article.id as article_id", "article.title as article_title", "article.slug as article_slug", "article.description as article_description", "article.image as article_image", "article.user_id as article_user_id", "article.source as article_source", "article.celestial_object_id  as article_celestial_object_id ")
+        $celestialObjects = Article::select("article.id as article_id", "article.title as article_title", "article.slug as article_slug", "article.description as article_description", "article.image as article_image", "article.user_id as article_user_id", "article.source as article_source", "article.celestial_object_id  as article_celestial_object_id")
             ->orderBy('id', 'DESC')
             ->get();
 
         return $celestialObjects;
+    }
+
+    public function getNumberOfCommentsFrom($article_id){
+        $numberOfComments = Comment::where('article_id', $article_id)->count();
+        
+        return $numberOfComments;
     }
 
     public function getAllArticlesOf($celestialObject)

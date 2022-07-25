@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Session;
 
 use Image;
 use App\Http\Controllers\Article\FavouriteArticlesController;
+use App\Http\Controllers\Article\ArticleVotesController;
 
 use App\Models\Article;
 use App\Models\Comment;
@@ -31,6 +32,7 @@ class ArticleController extends Controller
             $articles = $this->getAllArticles();
 
             $favouriteQuery = new FavouriteArticlesController();
+            $voteQuery = new ArticleVotesController();
 
             foreach($articles as $article){
                 // Attribute to check if the article is saved as favourite
@@ -39,6 +41,12 @@ class ArticleController extends Controller
 
                 // Attribute to check how many comments an article has
                 $article->number_comments = $this->getNumberOfCommentsFrom($article->article_id);
+
+                $article->vote = $voteQuery->obtainVote($article->article_id, Session::get('UserId'));
+
+                //Get the number of upvotes and downvotes
+                $article->upvotes_count = $voteQuery->countUpvotes($article->article_id);
+                $article->downvotes_count = $voteQuery->countDownvotes($article->article_id);
             }
         } else {
             //There is a filter
@@ -153,9 +161,20 @@ class ArticleController extends Controller
 
         // Attribute to check if the article is saved as favourite
         $favouriteQuery = new FavouriteArticlesController();
+
         $checkfavourite = $favouriteQuery->checkSaveArticle($article->article_id);
         $article->check_favourite = $checkfavourite;
 
+        //Check if the article has an upvote or downvote
+        $voteQuery = new ArticleVotesController();
+
+        $article->vote = $voteQuery->obtainVote($article->article_id, Session::get('UserId'));
+
+        //Get the number of upvotes and downvotes
+        $article->upvotes_count = $voteQuery->countUpvotes($article->article_id);
+        $article->downvotes_count = $voteQuery->countDownvotes($article->article_id);
+
+        //Get the equipment and the comments from the article
         $comments = $this->getCommentsFromArticle($articleId);
         $equipments = $this->getEquipmentsFromArticle($articleId);
 

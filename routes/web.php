@@ -8,6 +8,7 @@ use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\Article\CommentController;
 use App\Http\Controllers\Article\FavouriteArticlesController;
+use App\Http\Controllers\Article\ArticleVotesController;
 use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\Login\AuthController;
 use App\Http\Controllers\WhereToStart\WhereToStartController;
@@ -37,6 +38,7 @@ Route::get('/user/delete', [LoginController::class, 'userDelete'])->name('user.d
 Route::get('/user/profile/articles', [LoginController::class, 'showUserArticles'])->name('user.articles');
 Route::get('/user/profile/comments', [LoginController::class, 'showUserComments'])->name('user.comments');
 Route::get('/user/profile/favourites', [LoginController::class, 'showUserFavourites'])->name('user.favourites');
+Route::get("/user/profile/likes", [LoginController::class, 'showUserLikes'])->name('user.likes');
 
 //----------- Home Routes ----------//
 Route::get("/home", [HomeController::class, 'displayHome'])->name('home.display');
@@ -44,17 +46,26 @@ Route::get("/home", [HomeController::class, 'displayHome'])->name('home.display'
 //----------- WhereToStart Routes ----------//
 Route::get("/where-to-start", [WhereToStartController::class, 'index'])->name('wheretostart.index');
 
-//----------- Coord Finder Routes ----------//
-//Route::get("/coordenates_finder_form", [CoordsFinderController::class, 'displayForm'])->name('coords.form');
-//Route::post("/coordenates_finder_result", [CoordsFinderController::class, 'displayCoordenates'])->name('coords.display');
-
 //----------- Article & Comments Routes ----------//
 Route::resource('article', ArticleController::class);
 Route::get("/create-comment/{articleId}", [CommentController::class, 'addComment'])->name('article.create-comment');
-//--- Article Votes
+//--- Article Favourites
 Route::post("/save-as-favourite", [FavouriteArticlesController::class, 'saveArticle'])->name('article.saved-article');
 Route::delete("/delete-from-favourite", [FavouriteArticlesController::class, 'deleteFromSavedArticle'])->name('article.delete-saved-article');
+//--- Article Favourites
+Route::post("/like-article", [ArticleVotesController::class, 'likeArticle'])->name('article.like-article');
+Route::post("/dislike-article", [ArticleVotesController::class, 'dislikeArticle'])->name('article.dislike-article');
+Route::delete("/remove-vote-article", [ArticleVotesController::class, 'removeVoteFromArticle'])->name('article.remove-vote-article');
+
 
 //----------- About Routes ----------//
 Route::get("/about", [AboutController::class, 'displayAbout'])->name('about.display');
 Route::get("/send_mail", [AboutController::class, 'sendMessage'])->name('about.sendMessage');
+
+
+
+
+
+//----------- Coord Finder Routes ----------//
+//Route::get("/coordenates_finder_form", [CoordsFinderController::class, 'displayForm'])->name('coords.form');
+//Route::post("/coordenates_finder_result", [CoordsFinderController::class, 'displayCoordenates'])->name('coords.display');

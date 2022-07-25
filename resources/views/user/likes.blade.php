@@ -2,71 +2,83 @@
 
 @section('head')
 
-<title>AstroNewmy | Articles</title>
-<link rel="stylesheet" type="text/css" href="{{ asset('css/article/index.css') }}">
+<title>{{ Auth::user()->name; }}'s Liked Articles</title>
+
+<link rel="stylesheet" type="text/css" href="{{ asset('css/user/articles.css') }}">
 
 @endsection
 
 @section('section')
 
-<section id="content">
-	@if (!Auth::guest())
-	<div id="button-add-article">
-		<a href="{{ route('article.create') }}">
-			<img src="/imagenes/iconos/add_box.svg" alt="Add new Article" height="35px" width="35px">
-		</a>
-	</div>
-	@endif
+<nav>
+	<ul>
+		<li>
+			<a href="{{ route('user.articles') }}" class="{{ Request::routeIs('user.articles') ? 'active-page' : '' }}" title="My Articles"><span>Articles</span></a>
+		</li>
+		<li>
+			<a href="{{ route('user.comments') }}" class="{{ Request::routeIs('user.comments') ? 'active-page' : '' }}" title="My Comments"><span>Comments</span></a>
+		</li>
+		<li>
+			<a href="{{ route('user.favourites') }}" class="{{ Request::routeIs('user.favourites') ? 'active-page' : '' }}" title="Saved Articles"><span>Favourite</span></a>
+		</li>
+		<li>
+			<a href="{{ route('user.likes') }}" class="{{ Request::routeIs('user.likes') ? 'active-page' : '' }}" title="Liked Articles"><span>Likes</span></a>
+		</li>
 
+	</ul>
+
+</nav>
+
+<section id="articles-container">
 	@foreach($articles as $key=>$article)
-	<article class="article-container">
-		<div class="post-continer">
-			<a href="{{ route('article.show', ['article'=>$article->article_id]) }}" target="_blank">
-				<p>{{ $article->article_title }}</p>
-				<img src="/imagenes/article/standarized/{{ $article->article_image }}" alt="{{ $article->article_description }}" loading="{{ $key <= 3 ? "eager" : "lazy" }}">
-			</a>
-		</div>
+	<article>
+		<a href="{{ route('article.show', ['article'=>$article->article_id]) }}" target="_blank">
+			<div>
+				<h2>{{ $article->article_title }}</h2>
+			</div>
+			<div>
+				<img src="/imagenes/article/original/{{ $article->article_image }}" alt="{{ $article->article_description }}" loading="{{ $key <= 3 ? "eager" : "lazy" }}">
+			</div>
+		</a>
 		@if (Auth::check())
 		<div class="button-container">
 			@if ($article->vote === '1')
-				<button type="button" class="button-remove-upvote" data-id="{{ $article->article_id }}">
-					<img src="/imagenes/iconos/thumb_up-active.svg" alt="Upvote" height="25px" width="25px">
-					<span class="border-right vote">{{ $article->upvotes_count }}</span>
-				</button>
+			<button type="button" class="button-remove-upvote" data-id="{{ $article->article_id }}">
+				<img src="/imagenes/iconos/thumb_up-active.svg" alt="Upvote" height="25px" width="25px">
+				<span class="border-right vote">{{ $article->upvotes_count }}</span>
+			</button>
 			@else
-				<button type="button" class="button-upvote" data-id="{{ $article->article_id }}">
-					<img src="/imagenes/iconos/thumb_up-unactive.svg" alt="Upvote" height="25px" width="25px">
-					<span class="border-right vote">{{ $article->upvotes_count }}</span>
-				</button>
+			<button type="button" class="button-upvote" data-id="{{ $article->article_id }}">
+				<img src="/imagenes/iconos/thumb_up-unactive.svg" alt="Upvote" height="25px" width="25px">
+				<span class="border-right vote">{{ $article->upvotes_count }}</span>
+			</button>
 			@endif
 
 			@if ($article->vote === '-1')
-				<button type="button" class="button-remove-downvote" data-id="{{ $article->article_id }}">
-					<img src="/imagenes/iconos/thumb_down-active.svg" alt="Downvote" height="25px" width="25px">
-					<span class="border-right vote">{{ $article->downvotes_count }}</span>
-				</button>
+			<button type="button" class="button-remove-downvote" data-id="{{ $article->article_id }}">
+				<img src="/imagenes/iconos/thumb_down-active.svg" alt="Downvote" height="25px" width="25px">
+				<span class="border-right vote">{{ $article->downvotes_count }}</span>
+			</button>
 			@else
-				<button type="button" class="button-downvote" data-id="{{ $article->article_id }}">
-					<img src="/imagenes/iconos/thumb_down-unactive.svg" alt="Downvote" height="25px" width="25px">
-					<span class="border-right vote">{{ $article->downvotes_count }}</span>
-				</button>
+			<button type="button" class="button-downvote" data-id="{{ $article->article_id }}">
+				<img src="/imagenes/iconos/thumb_down-unactive.svg" alt="Downvote" height="25px" width="25px">
+				<span class="border-right vote">{{ $article->downvotes_count }}</span>
+			</button>
 			@endif
 
 			<button type="button">
-				<a href="{{ route('article.show', ['article'=>$article->article_id]) }}#comments-container" title="Comments">
-					<img src="/imagenes/iconos/comment.svg" alt="Comment" height="25px" width="25px">
-					<span class="border-right vote">{{ $article->number_comments }}</span>
-				</a>
+				<img src="/imagenes/iconos/comment.svg" alt="Comment" height="25px" width="25px">
+				<span class="border-right vote">{{ $article->number_comments }}</span>
 			</button>
 
 			@if ($article->check_favourite)
-				<button type="button" class="button-favourite" data-id="{{ $article->article_id }}">
-					<img src="/imagenes/iconos/favourite-active.svg" alt="Add as favourite" height="25px" width="25px">
-				</button>
+			<button type="button" class="button-favourite" data-id="{{ $article->article_id }}">
+				<img src="/imagenes/iconos/favourite-active.svg" alt="Add as favourite" height="25px" width="25px">
+			</button>
 			@else
-				<button type="button" class="button-unfavourite" data-id="{{ $article->article_id }}">
-					<img src="/imagenes/iconos/favourite-unactive.svg" alt="Add as favourite" height="25px" width="25px">
-				</button>
+			<button type="button" class="button-unfavourite" data-id="{{ $article->article_id }}">
+				<img src="/imagenes/iconos/favourite-unactive.svg" alt="Add as favourite" height="25px" width="25px">
+			</button>
 			@endif
 
 			<div class="dropdown more-options">
@@ -102,43 +114,10 @@
 		</div>
 		@endif
 	</article>
+
+	<hr>
 	@endforeach
 </section>
-
-<div id="login-modal" class="modal">
-
-	<div class="modal-content">
-		<span onclick="hideModal()" class="close" title="Close Modal">×</span>
-		<p>To rate a post or save it to favourites you will need to Login first.</p>
-		<div>
-			<a href="{{ route('login.index') }}" title="Log in">
-				Login in
-			</a>
-
-			<p>New to the site? <a href="{{ route('login.create-form') }}" title="Register">Register</a></p>
-		</div>
-	</div>
-</div>
-
-<script>
-	// Get the modal
-	var modal = document.getElementById('login-modal');
-
-	function hideModal() {
-		modal.style.display = "none";
-	}
-
-	function showModal() {
-		modal.style.display = "flex";
-	}
-
-	// When the user clicks anywhere outside of the modal, close it
-	window.onclick = function(event) {
-		if (event.target == modal) {
-			modal.style.display = "none";
-		}
-	}
-</script>
 
 <script>
 	$.ajaxSetup({
@@ -238,7 +217,7 @@
 					$this.find("span").text(numberUpvotes);
 
 					//If there is a downvote change it
-					if(response.message == 1){
+					if (response.message == 1) {
 						var changedownvote = $(".button-remove-downvote")
 						changedownvote.find("img").attr("src", "/imagenes/iconos/thumb_down-unactive.svg");
 
@@ -290,7 +269,7 @@
 					$this.find("span").text(numberDownvote);
 
 					//If there is a downvote change it
-					if(response.message == 1){
+					if (response.message == 1) {
 						var changedownvote = $(".button-remove-upvote")
 						changedownvote.find("img").attr("src", "/imagenes/iconos/thumb_up-unactive.svg");
 
@@ -386,7 +365,6 @@
 			}
 		});
 	});
-
 </script>
 
 @endsection

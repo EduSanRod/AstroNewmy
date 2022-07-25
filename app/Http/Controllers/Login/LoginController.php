@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Login;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\Article\FavouriteArticlesController;
+use App\Http\Controllers\Article\ArticleVotesController;
 
 use App\Models\User;
 use App\Models\Article;
@@ -179,6 +181,7 @@ class LoginController extends Controller
         $articles = $this->getAllArticlesFromUser($userId);
 
         $favouriteQuery = new FavouriteArticlesController();
+        $voteQuery = new ArticleVotesController();
 
         foreach ($articles as $article) {
             // Attribute to check if the article is saved as favourite
@@ -187,6 +190,12 @@ class LoginController extends Controller
 
             // Attribute to check how many comments an article has
             $article->number_comments = $this->getNumberOfCommentsFrom($article->article_id);
+
+            $article->vote = $voteQuery->obtainVote($article->article_id, Session::get('UserId'));
+
+            //Get the number of upvotes and downvotes
+            $article->upvotes_count = $voteQuery->countUpvotes($article->article_id);
+            $article->downvotes_count = $voteQuery->countDownvotes($article->article_id);
         }
 
         return view("user/articles", [
@@ -203,7 +212,9 @@ class LoginController extends Controller
 
         $userId = auth()->user()->id;
         $articles = $this->getAllArticlesWithCommentsFromUser($userId);
+
         $favouriteQuery = new FavouriteArticlesController();
+        $voteQuery = new ArticleVotesController();
 
         foreach ($articles as $article) {
             // Attribute to check if the article is saved as favourite
@@ -212,6 +223,12 @@ class LoginController extends Controller
 
             // Attribute to check how many comments an article has
             $article->number_comments = $this->getNumberOfCommentsFrom($article->article_id);
+
+            $article->vote = $voteQuery->obtainVote($article->article_id, Session::get('UserId'));
+
+            //Get the number of upvotes and downvotes
+            $article->upvotes_count = $voteQuery->countUpvotes($article->article_id);
+            $article->downvotes_count = $voteQuery->countDownvotes($article->article_id);
         }
 
         return view("user/comments", [
@@ -230,6 +247,7 @@ class LoginController extends Controller
         $articles = $this->getAllFavouriteArticlesFromUser($userId);
 
         $favouriteQuery = new FavouriteArticlesController();
+        $voteQuery = new ArticleVotesController();
 
         foreach ($articles as $article) {
             // Attribute to check if the article is saved as favourite
@@ -238,9 +256,48 @@ class LoginController extends Controller
 
             // Attribute to check how many comments an article has
             $article->number_comments = $this->getNumberOfCommentsFrom($article->article_id);
+
+            $article->vote = $voteQuery->obtainVote($article->article_id, Session::get('UserId'));
+
+            //Get the number of upvotes and downvotes
+            $article->upvotes_count = $voteQuery->countUpvotes($article->article_id);
+            $article->downvotes_count = $voteQuery->countDownvotes($article->article_id);
         }
 
         return view("user/favourites", [
+            "articles" => $articles,
+        ]);
+    }
+
+    public function showUserLikes()
+    {
+        //Check if user is logged in    
+        if (!Auth::check()) {
+            return redirect()->route('article.index');
+        }
+
+        $userId = auth()->user()->id;
+        $articles = $this->getAllLikedArticlesFromUser($userId);
+
+        $favouriteQuery = new FavouriteArticlesController();
+        $voteQuery = new ArticleVotesController();
+
+        foreach ($articles as $article) {
+            // Attribute to check if the article is saved as favourite
+            $checkfavourite = $favouriteQuery->checkSaveArticle($article->article_id);
+            $article->check_favourite = $checkfavourite;
+
+            // Attribute to check how many comments an article has
+            $article->number_comments = $this->getNumberOfCommentsFrom($article->article_id);
+
+            $article->vote = $voteQuery->obtainVote($article->article_id, Session::get('UserId'));
+
+            //Get the number of upvotes and downvotes
+            $article->upvotes_count = $voteQuery->countUpvotes($article->article_id);
+            $article->downvotes_count = $voteQuery->countDownvotes($article->article_id);
+        }
+
+        return view("user/likes", [
             "articles" => $articles,
         ]);
     }
@@ -269,14 +326,25 @@ class LoginController extends Controller
 
     public function getAllFavouriteArticlesFromUser($userId)
     {
-        $celestialObjects = Article::join('savedarticles', 'savedarticles.article_id', '=', 'article.id')
+        $articles = Article::join('savedarticles', 'savedarticles.article_id', '=', 'article.id')
             ->select("article.id as article_id", "article.title as article_title", "article.slug as article_slug", "article.description as article_description", "article.image as article_image", "article.user_id as article_user_id", "article.source as article_source", "article.celestial_object_id  as article_celestial_object_id ")
             ->where('savedarticles.user_id', $userId)
             ->orderBy('savedarticles.created_at', 'DESC')
             ->distinct()
             ->get();
 
-        return $celestialObjects;
+        return $articles;
+    }
+
+    public function getAllLikedArticlesFromUser($userId){
+        $articles = Article::join('articlevotes', 'articlevotes.article_id', '=', 'article.id')
+        ->select("article.id as article_id", "article.title as article_title", "article.slug as article_slug", "article.description as article_description", "article.image as article_image", "article.user_id as article_user_id", "article.source as article_source", "article.celestial_object_id  as article_celestial_object_id ")
+        ->where('articlevotes.user_id', $userId)
+        ->orderBy('articlevotes.created_at', 'DESC')
+        ->distinct()
+        ->get();
+
+        return $articles;
     }
 
     public function getNumberOfCommentsFrom($article_id){

@@ -162,6 +162,7 @@ a:hover {
 	grid-row-end: 3;
 
 	min-height: 100vh;
+	height: max-content;
 }
 
 /* ------------------ */

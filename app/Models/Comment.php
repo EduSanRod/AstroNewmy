@@ -7,10 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $id
  * @property string $comment_Text
- * @property int $likes
- * @property int $dislikes
  * @property int $user_id
  * @property int $article_id
+ * @property int $comment_id
  * @property string $created_at
  */
 class Comment extends Model
@@ -25,6 +24,6 @@ class Comment extends Model
     /**
      * @var array
      */
-    protected $fillable = ['comment_Text', 'likes', 'dislikes', 'user_id', 'article_id ', 'created_at'];
+    protected $fillable = ['comment_Text', 'user_id', 'article_id', 'comment_id', 'created_at'];
 
 }

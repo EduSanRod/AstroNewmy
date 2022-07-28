@@ -76,6 +76,13 @@
 					<a href="{{ route('article.edit', ['article'=>$article->article_id]) }}">Update Article</a>
 					@endif
 					<a href="{{ route('user.setting') }}">Report</a>
+					@if( Auth::user()->role == 'admin')
+					<form action="{{ route('article.destroy', ['article' => $article->article_id]) }}" method="POST">
+						@csrf
+						@method('DELETE')
+						<button type="submit" class="deleteButton">Delete</button>
+					</form>
+					@endif
 				</div>
 			</div>
 		</div>
@@ -239,11 +246,11 @@
 
 					//If there is a downvote change it
 					if(response.message == 1){
-						var changedownvote = $(".button-remove-downvote")
+						var changedownvote = $this.next();
 						changedownvote.find("img").attr("src", "/imagenes/iconos/thumb_down-unactive.svg");
 
 						//Remove 1 to the upvote count
-						let numberUpvotes = changedownvote.find("span").text();
+						let numberUpvotes = parseInt(changedownvote.find("span").text());
 						numberUpvotes = parseInt(numberUpvotes) - 1;
 						changedownvote.find("span").text(parseInt(numberUpvotes));
 
@@ -291,12 +298,12 @@
 
 					//If there is a downvote change it
 					if(response.message == 1){
-						var changedownvote = $(".button-remove-upvote")
+						var changedownvote = $this.prev();
 						changedownvote.find("img").attr("src", "/imagenes/iconos/thumb_up-unactive.svg");
 
 						//Remove 1 to the upvote count
-						let numberUpvotes = changedownvote.find("span").text();
-						numberUpvotes = parseInt(numberUpvotes) - 1;
+						let numberUpvotes = parseInt(changedownvote.find("span").text());
+						numberUpvotes = numberUpvotes - 1;
 						changedownvote.find("span").text(numberUpvotes);
 
 						changedownvote.addClass("button-upvote");

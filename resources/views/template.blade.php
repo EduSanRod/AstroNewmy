@@ -16,7 +16,7 @@
 
 <body>
 	<header>
-		<a href="/home">
+		<a href="{{ route('home.display') }}">
 			<img src="/imagenes/iconos/mainLogo.PNG" alt="Main logo website" height="60px">
 		</a>
 
@@ -46,10 +46,10 @@
 
 	<footer>
 		<ul>
-			<li><a href="/home">Home</a></li>
-			<li><a href="/coordenates_finder_form">Coords Finder</a></li>
-			<li><a href="/article">Articles</a></li>
-			<li><a href="/about">About</a></li>
+			<li><a href="{{ route('home.display') }}" title="Home">Home</a></li>
+			<li><a href="{{ route('wheretostart.index') }}" title="Where to Start">Where to Start</a></li>
+			<li><a href="{{ route('article.index') }}" title="Articles">Articles</a></li>
+			<li><a href="{{ route('about.display') }}" title="About">About</a></li>
 		</ul>
 		<p>© 2022 AstroNewmy</p>
 	</footer>

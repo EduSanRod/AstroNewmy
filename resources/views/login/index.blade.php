@@ -21,8 +21,8 @@
 		@csrf
 		@method('POST')
 		<!-- Email input -->
-		<label for="email" >Email address</label>
-		<input type="email" id="email" name="email" class="form-input" placeholder="JohnDoe@gmail.com" />
+		<label for="email" >Username or Email</label>
+		<input type="text" id="email" name="email" class="form-input" />
 
 		<!-- Password input -->
 		<label for="password" >Password</label>

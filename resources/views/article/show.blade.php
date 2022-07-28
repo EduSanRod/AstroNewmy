@@ -21,24 +21,24 @@
 			@if ($article->vote === '1')
 			<button type="button" class="button-remove-upvote" data-id="{{ $article->article_id }}">
 				<img src="/imagenes/iconos/thumb_up-active.svg" alt="Upvote" height="25px" width="25px">
-				<span class="border-right vote">123</span>
+				<span class="border-right vote">{{ $article->upvotes_count }}</span>
 			</button>
 			@else
 			<button type="button" class="button-upvote" data-id="{{ $article->article_id }}">
 				<img src="/imagenes/iconos/thumb_up-unactive.svg" alt="Upvote" height="25px" width="25px">
-				<span class="border-right vote">123</span>
+				<span class="border-right vote">{{ $article->upvotes_count }}</span>
 			</button>
 			@endif
 
 			@if ($article->vote === '-1')
 			<button type="button" class="button-remove-downvote" data-id="{{ $article->article_id }}">
 				<img src="/imagenes/iconos/thumb_down-active.svg" alt="Downvote" height="25px" width="25px">
-				<span class="border-right vote">123</span>
+				<span class="border-right vote">{{ $article->downvotes_count }}</span>
 			</button>
 			@else
 			<button type="button" class="button-downvote" data-id="{{ $article->article_id }}">
 				<img src="/imagenes/iconos/thumb_down-unactive.svg" alt="Downvote" height="25px" width="25px">
-				<span class="border-right vote">123</span>
+				<span class="border-right vote">{{ $article->downvotes_count }}</span>
 			</button>
 			@endif
 
@@ -66,6 +66,13 @@
 					<a href="{{ route('article.edit', ['article'=>$article->article_id]) }}">Update Article</a>
 					@endif
 					<a href="{{ route('user.setting') }}">Report</a>
+					@if( Auth::user()->role == 'admin')
+					<form action="{{ route('article.destroy', ['article' => $article->article_id]) }}" method="POST">
+						@csrf
+						@method('DELETE')
+						<button type="submit" class="deleteButton">Delete</button>
+					</form>
+					@endif
 				</div>
 			</div>
 		</div>
@@ -73,12 +80,12 @@
 		<div class="button-container">
 			<button type="button" onclick="showModal()">
 				<img src="/imagenes/iconos/thumb_up-unactive.svg" alt="Upvote" height="25px" width="25px">
-				<span class="border-right vote">123</span>
+				<span class="border-right vote">{{ $article->upvotes_count }}</span>
 			</button>
 
 			<button type="button" onclick="showModal()">
 				<img src="/imagenes/iconos/thumb_down-unactive.svg" alt="Downvote" height="25px" width="25px">
-				<span class="border-right vote">123</span>
+				<span class="border-right vote">{{ $article->downvotes_count }}</span>
 			</button>
 
 			<button type="button" onclick="showModal()">
@@ -122,18 +129,126 @@
 		<article class="comment">
 			<h3 class="comment-author">{{ $comment->comment_author }} </h3>
 			<p class="comment-timestamp">{{ $comment->comment_created_at }}</p>
+			@if($comment->comment_comment_text != null)
 			<p class="comment-text">{{ $comment->comment_comment_text }}</p>
-			<div class="button-container">
-				<button type="button">
-					<span class="material-symbols-outlined">thumb_up</span>
-					<span class="border-right vote">123</span>
+			@else
+			<p class="comment-text"><i>User has deleted the comment.</i></p>
+			@endif
+			<div class="button-comment-container">
+				@if (Auth::check())
+				@if ($comment->vote === '1')
+				<button type="button" class="button-remove-upvote-comment" data-id="{{ $comment->comment_id }}">
+					<img src="/imagenes/iconos/thumb_up-active.svg" alt="Upvote" height="20px" width="20px">
+					<span class="border-right vote">{{ $comment->upvotes_count }}</span>
+				</button>
+				@else
+				<button type="button" class="button-upvote-comment" data-id="{{ $comment->comment_id }}">
+					<img src="/imagenes/iconos/thumb_up-unactive.svg" alt="Upvote" height="20px" width="20px">
+					<span class="border-right vote">{{ $comment->upvotes_count }}</span>
+				</button>
+				@endif
+
+				@if ($comment->vote === '-1')
+				<button type="button" class="button-remove-downvote-comment" data-id="{{ $comment->comment_id }}">
+					<img src="/imagenes/iconos/thumb_down-active.svg" alt="Downvote" height="20px" width="20px">
+					<span class="border-right vote">{{ $comment->downvotes_count }}</span>
+				</button>
+				@else
+				<button type="button" class="button-downvote-comment" data-id="{{ $comment->comment_id }}">
+					<img src="/imagenes/iconos/thumb_down-unactive.svg" alt="Downvote" height="20px" width="20px">
+					<span class="border-right vote">{{ $comment->downvotes_count }}</span>
+				</button>
+				@endif
+
+				@if(Auth::user()->id == $comment->comment_user_id && $comment->comment_comment_text != null)
+				<form action="{{ route('article.delete-comment', $comment->comment_id) }}" method="POST" class="form-delete-comment">
+					@csrf
+					@method('DELETE')
+					<button type="submit" class="deleteCommentButton">
+						<img src="/imagenes/iconos/delete.svg" alt="Downvote" height="20px" width="20px" title="Delete comment">
+					</button>
+				</form>
+				@endif
+
+				<button type="button" class="reply-comment-button" data-commentId="{{ $comment->comment_id }}" onclick="showFormReplyComment(this)">
+					<span>Reply</span>
+				</button>
+				@else
+				<button type="button" onclick="showModal()">
+					<img src="/imagenes/iconos/thumb_up-unactive.svg" alt="Upvote" height="20px" width="20px">
+					<span class="border-right vote">{{ $comment->upvotes_count }}</span>
 				</button>
 
-				<button type="button">
-					<span class="material-symbols-outlined">thumb_down</span>
-					<span class="border-right vote">123</span>
+				<button type="button" onclick="showModal()">
+					<img src="/imagenes/iconos/thumb_down-unactive.svg" alt="Downvote" height="20px" width="20px">
+					<span class="border-right vote">{{ $comment->downvotes_count }}</span>
 				</button>
+				@endif
+
 			</div>
+			@if($comment->replies != null)
+			@forelse($comment->replies as $reply)
+			<div class="reply-container">
+				<h3 class="comment-author">{{ $reply->comment_author }} </h3>
+				<p class="comment-timestamp">{{ $reply->comment_created_at }}</p>
+				@if($reply->comment_comment_text != null)
+				<p class="comment-text">{{ $reply->comment_comment_text }}</p>
+				@else
+				<p class="comment-text"><i>User has deleted the comment.</i></p>
+				@endif
+				<div class="button-comment-container">
+
+					@if (Auth::check())
+						@if ($reply->vote === '1')
+						<button type="button" class="button-remove-upvote-comment" data-id="{{ $reply->comment_id_reply }}">
+							<img src="/imagenes/iconos/thumb_up-active.svg" alt="Upvote" height="20px" width="20px">
+							<span class="border-right vote">{{ $reply->upvotes_count }}</span>
+						</button>
+						@else
+						<button type="button" class="button-upvote-comment" data-id="{{ $reply->comment_id_reply }}">
+							<img src="/imagenes/iconos/thumb_up-unactive.svg" alt="Upvote" height="20px" width="20px">
+							<span class="border-right vote">{{ $reply->upvotes_count }}</span>
+						</button>
+						@endif
+
+						@if ($reply->vote === '-1')
+						<button type="button" class="button-remove-downvote-comment" data-id="{{ $reply->comment_id_reply }}">
+							<img src="/imagenes/iconos/thumb_down-active.svg" alt="Downvote" height="20px" width="20px">
+							<span class="border-right vote">{{ $reply->downvotes_count }}</span>
+						</button>
+						@else
+						<button type="button" class="button-downvote-comment" data-id="{{ $reply->comment_id_reply }}">
+							<img src="/imagenes/iconos/thumb_down-unactive.svg" alt="Downvote" height="20px" width="20px">
+							<span class="border-right vote">{{ $reply->downvotes_count }}</span>
+						</button>
+						@endif
+
+						@if(Auth::user()->id == $reply->comment_user_id_reply && $reply->comment_comment_text != null)
+						<form action="{{ route('article.delete-comment', $reply->comment_id_reply) }}" method="POST" class="form-delete-comment">
+							@csrf
+							@method('DELETE')
+							<button type="submit" class="deleteCommentButton">
+								<img src="/imagenes/iconos/delete.svg" alt="Downvote" height="20px" width="20px" title="Delete comment">
+							</button>
+						</form>
+						@endif
+					@else
+						<button type="button" onclick="showModal()">
+							<img src="/imagenes/iconos/thumb_up-unactive.svg" alt="Upvote" height="20px" width="20px">
+							<span class="border-right vote">{{ $reply->upvotes_count }}</span>
+						</button>
+
+						<button type="button" onclick="showModal()">
+							<img src="/imagenes/iconos/thumb_down-unactive.svg" alt="Downvote" height="20px" width="20px">
+							<span class="border-right vote">{{ $reply->downvotes_count }}</span>
+						</button>
+					@endif
+				</div>
+			</div>
+			@empty
+
+			@endforelse
+			@endif
 		</article>
 		@endforeach
 		@else
@@ -269,10 +384,21 @@
 
 					$this.find("img").attr("src", "/imagenes/iconos/thumb_up-active.svg");
 
+					//Add 1 to the upvote count
+					let numberUpvotes = $this.find("span").text();
+					numberUpvotes = parseInt(numberUpvotes) + 1;
+					$this.find("span").text(numberUpvotes);
+
 					//If there is a downvote change it
 					if (response.message == 1) {
-						var changedownvote = $(".button-remove-downvote")
+						var changedownvote = $this.next();
 						changedownvote.find("img").attr("src", "/imagenes/iconos/thumb_down-unactive.svg");
+
+						//Remove 1 to the upvote count
+						let numberUpvotes = parseInt(changedownvote.find("span").text());
+						numberUpvotes = parseInt(numberUpvotes) - 1;
+						changedownvote.find("span").text(parseInt(numberUpvotes));
+
 						changedownvote.addClass("button-downvote");
 						changedownvote.removeClass("button-remove-downvote");
 					}
@@ -310,12 +436,24 @@
 
 					$this.find("img").attr("src", "/imagenes/iconos/thumb_down-active.svg");
 
+					//Add 1 to the downvote count
+					let numberDownvote = $this.find("span").text();
+					numberDownvote = parseInt(numberDownvote) + 1;
+					$this.find("span").text(numberDownvote);
+
 					//If there is a downvote change it
 					if (response.message == 1) {
-						var changedownvote = $(".button-remove-upvote")
+						var changedownvote = $this.prev();
 						changedownvote.find("img").attr("src", "/imagenes/iconos/thumb_up-unactive.svg");
+
+						//Remove 1 to the upvote count
+						let numberUpvotes = parseInt(changedownvote.find("span").text());
+						numberUpvotes = numberUpvotes - 1;
+						changedownvote.find("span").text(numberUpvotes);
+
 						changedownvote.addClass("button-upvote");
 						changedownvote.removeClass("button-remove-upvote");
+
 					}
 				} else {
 					alert("Error");
@@ -349,6 +487,11 @@
 					$this.addClass("button-upvote");
 
 					$this.find("img").attr("src", "/imagenes/iconos/thumb_up-unactive.svg");
+
+					//Remove 1 to the upvote count
+					let numberUpvotes = $this.find("span").text();
+					numberUpvotes = parseInt(numberUpvotes) - 1;
+					$this.find("span").text(numberUpvotes);
 				} else {
 					alert("Error");
 				}
@@ -381,6 +524,213 @@
 					$this.addClass("button-downvote");
 
 					$this.find("img").attr("src", "/imagenes/iconos/thumb_down-unactive.svg");
+
+					//Remove 1 to the downvote count
+					let numberDownvote = $this.find("span").text();
+					numberDownvote = parseInt(numberDownvote) - 1;
+					$this.find("span").text(numberDownvote);
+				} else {
+					alert("Error");
+				}
+			},
+			error: function(error) {
+				console.log(error)
+			}
+		});
+	});
+</script>
+
+<script>
+	function showFormReplyComment(e) {
+		var commentId = e.getAttribute('data-commentId');
+
+		var url = '{{ route("article.reply-comment", ":commentId") }}';
+		url = url.replace(':commentId', commentId);
+
+		parentDiv = e.parentElement;
+		$fragmentFormReply = "<form action='" + url + "' class='form-reply-comment'><textarea name='reply_comment_text' id='reply_comment_text' class='textarea-reply-comment' rows='4' maxlength='255'></textarea><button type='submit' class='submit-reply-comment'>Reply</button></form>";
+
+		$(parentDiv).append($fragmentFormReply);
+
+		e.disabled = true;
+	}
+</script>
+
+<script>
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
+
+	$(document).on("click", ".button-upvote-comment", function(e) {
+
+		e.preventDefault();
+
+		var $this = $(this);
+		var commentId = $(this).data('id');
+		var url = "{{ route('article.like-comment') }}";
+
+		$.ajax({
+			url: url,
+			method: 'POST',
+			data: {
+				commentId: commentId
+			},
+			success: function(response) {
+				if (response.success) {
+					//Change the src image from the button
+
+					$this.removeClass("button-upvote-comment");
+					$this.addClass("button-remove-upvote-comment");
+
+					$this.find("img").attr("src", "/imagenes/iconos/thumb_up-active.svg");
+
+					//Add 1 to the upvote count
+					let numberUpvotes = $this.find("span").text();
+					numberUpvotes = parseInt(numberUpvotes) + 1;
+					$this.find("span").text(numberUpvotes);
+
+					//If there is a downvote change it
+					if (response.message == 1) {
+						var changedownvote = $this.next();
+						changedownvote.find("img").attr("src", "/imagenes/iconos/thumb_down-unactive.svg");
+
+						//Remove 1 to the upvote count
+						let numberUpvotes = parseInt(changedownvote.find("span").text());
+						numberUpvotes = parseInt(numberUpvotes) - 1;
+						changedownvote.find("span").text(parseInt(numberUpvotes));
+
+						changedownvote.addClass("button-downvote-comment");
+						changedownvote.removeClass("button-remove-downvote-comment");
+					}
+
+				} else {
+					alert("Error");
+				}
+			},
+			error: function(error) {
+				console.log(error)
+			}
+		});
+	});
+
+	$(document).on("click", ".button-downvote-comment", function(e) {
+
+		e.preventDefault();
+
+		var $this = $(this);
+		var commentId = $(this).data('id');
+		var url = "{{ route('article.dislike-comment') }}";
+
+		$.ajax({
+			url: url,
+			method: 'POST',
+			data: {
+				commentId: commentId
+			},
+			success: function(response) {
+				if (response.success) {
+					//Change the src image from the button
+
+					$this.removeClass("button-downvote-comment");
+					$this.addClass("button-remove-downvote-comment");
+
+					$this.find("img").attr("src", "/imagenes/iconos/thumb_down-active.svg");
+
+					//Add 1 to the downvote count
+					let numberDownvote = $this.find("span").text();
+					numberDownvote = parseInt(numberDownvote) + 1;
+					$this.find("span").text(numberDownvote);
+
+					//If there is a downvote change it
+					if (response.message == 1) {
+						var changedownvote = $this.prev();
+						changedownvote.find("img").attr("src", "/imagenes/iconos/thumb_up-unactive.svg");
+
+						//Remove 1 to the upvote count
+						let numberUpvotes = parseInt(changedownvote.find("span").text());
+						numberUpvotes = numberUpvotes - 1;
+						changedownvote.find("span").text(numberUpvotes);
+
+						changedownvote.addClass("button-upvote-comment");
+						changedownvote.removeClass("button-remove-upvote-comment");
+
+					}
+				} else {
+					alert("Error");
+				}
+			},
+			error: function(error) {
+				console.log(error)
+			}
+		});
+	});
+
+	$(document).on("click", ".button-remove-upvote-comment", function(e) {
+
+		e.preventDefault();
+
+		var $this = $(this);
+		var commentId = $(this).data('id');
+		var url = "{{ route('article.remove-vote-comment') }}";
+
+		$.ajax({
+			url: url,
+			method: 'DELETE',
+			data: {
+				commentId: commentId
+			},
+			success: function(response) {
+				if (response.success) {
+					//Change the src image from the button
+
+					$this.removeClass("button-remove-upvote-comment");
+					$this.addClass("button-upvote-comment");
+
+					$this.find("img").attr("src", "/imagenes/iconos/thumb_up-unactive.svg");
+
+					//Remove 1 to the upvote count
+					let numberUpvotes = $this.find("span").text();
+					numberUpvotes = parseInt(numberUpvotes) - 1;
+					$this.find("span").text(numberUpvotes);
+				} else {
+					alert("Error");
+				}
+			},
+			error: function(error) {
+				console.log(error)
+			}
+		});
+	});
+
+	$(document).on("click", ".button-remove-downvote-comment", function(e) {
+
+		e.preventDefault();
+
+		var $this = $(this);
+		var commentId = $(this).data('id');
+		var url = "{{ route('article.remove-vote-comment') }}";
+
+		$.ajax({
+			url: url,
+			method: 'DELETE',
+			data: {
+				commentId: commentId
+			},
+			success: function(response) {
+				if (response.success) {
+					//Change the src image from the button
+
+					$this.removeClass("button-remove-downvote-comment");
+					$this.addClass("button-downvote-comment");
+
+					$this.find("img").attr("src", "/imagenes/iconos/thumb_down-unactive.svg");
+
+					//Remove 1 to the downvote count
+					let numberDownvote = $this.find("span").text();
+					numberDownvote = parseInt(numberDownvote) - 1;
+					$this.find("span").text(numberDownvote);
 				} else {
 					alert("Error");
 				}

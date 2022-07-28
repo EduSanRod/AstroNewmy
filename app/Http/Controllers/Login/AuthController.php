@@ -20,7 +20,7 @@ class AuthController extends Controller
         $email = $request->input('email');
         $password = $request->input('password');
 
-        if (Auth::attempt(['email' => $email, 'password' => $password])) {
+        if (Auth::attempt(['email' => $email, 'password' => $password]) || Auth::attempt(['name' => $email, 'password' => $password])) {
             //Create session variable with the id of the user
             Session::put('UserId', auth()->user()->id);
             

@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
-use App\Models\ArticleVotes;
+use App\Models\CommentVotes;
 
-class ArticleVotesController extends Controller
+class CommentVotesController extends Controller
 {
-    public function likeArticle(Request $request){
+    public function likeComment(Request $request){
 
         //Check if user is logged in    
         if (!Auth::check()) {
@@ -19,25 +19,24 @@ class ArticleVotesController extends Controller
         }
 
         $user_id = Session::get('UserId');
-        $article_id = $request->articleId;
+        $comment_id = $request->commentId;
         $vote = '1';
 
-        //Check if there is already a vote with that user and that article.
-        $idVoteFromArticle = $this->checkVoteFromArticle($article_id, $user_id);
+        //Check if there is already a vote with that user and that comment.
+        $idVoteFromComment = $this->checkVoteFromComment($comment_id, $user_id);
 
-        if($idVoteFromArticle === 0){
+        if($idVoteFromComment === 0){
             //There is no previous vote, create it
-            $this->likeArticleInBBDD($article_id, $user_id);
+            $this->likeCommentInBBDD($comment_id, $user_id);
 
             return response()->json([
                 'success' => true,
                 'message' => 0,
                 'messageText' => 'No habia ningun registro de voto',
             ]);
-
         }else{
             //There is a registry with the vote, update it to a like whatever it is
-            ArticleVotes::where('id',$idVoteFromArticle)
+            CommentVotes::where('id', $idVoteFromComment)
             ->update(['vote'=>$vote]);
 
             return response()->json([
@@ -48,22 +47,23 @@ class ArticleVotesController extends Controller
         }
     }
 
-    public function dislikeArticle(Request $request){
+    public function dislikeComment(Request $request){
+
         //Check if user is logged in    
         if (!Auth::check()) {
             return redirect()->route('article.index');
         }
 
         $user_id = Session::get('UserId');
-        $article_id = $request->articleId;
+        $comment_id = $request->commentId;
         $vote = '-1';
 
-        //Check if there is already a vote with that user and that article.
-        $idVoteFromArticle = $this->checkVoteFromArticle($article_id, $user_id);
+        //Check if there is already a vote with that user and that comment.
+        $idVoteFromComment = $this->checkVoteFromComment($comment_id, $user_id);
 
-        if($idVoteFromArticle === 0){
+        if($idVoteFromComment === 0){
             //There is no previous vote, create it
-            $this->dislikeArticleInBBDD($article_id, $user_id);
+            $this->dislikeCommentInBBDD($comment_id, $user_id);
 
             return response()->json([
                 'success' => true,
@@ -72,33 +72,33 @@ class ArticleVotesController extends Controller
             ]);
         }else{
             //There is a registry with the vote, update it to a like whatever it is
-            ArticleVotes::where('id',$idVoteFromArticle)
+            CommentVotes::where('id', $idVoteFromComment)
             ->update(['vote'=>$vote]);
 
             return response()->json([
                 'success' => true,
                 'message' => 1,
-                'messageText' => 'Habia un voto de like, se ha cambiado a dislike',
+                'messageText' => 'Habia un voto de dislike, se ha cambiado a Like',
             ]);
         }
     }
 
-    public function removeVoteFromArticle(Request $request){
-
+    public function removeVoteComment(Request $request){
+        
         //Check if user is logged in    
         if (!Auth::check()) {
             return redirect()->route('article.index');
         }
 
         $user_id = Session::get('UserId');
-        $article_id = $request->articleId;
+        $comment_id = $request->commentId;
 
-        //Check if there is already a vote with that user and that article.
-        $checkVoteFromArticle = $this->checkVoteFromArticle($article_id, $user_id);
+        //Check if there is already a vote with that user and that comment.
+        $idVoteFromComment = $this->checkVoteFromComment($comment_id, $user_id);
 
-        if($checkVoteFromArticle){
-            ArticleVotes::where([
-                'article_id'=> $article_id,
+        if($idVoteFromComment){
+            CommentVotes::where([
+                'comment_id'=> $comment_id,
                 'user_id'=> $user_id,
             ])->delete();
 
@@ -116,51 +116,49 @@ class ArticleVotesController extends Controller
         ]);
     }
 
-    /*----- Query Functions -----*/
+    //----------- Query Functions -------------
 
-    public function checkVoteFromArticle($article_id, $user_id){
-        $checkVoteArticle = ArticleVotes::where([
-            'article_id'=> $article_id,
+    public function checkVoteFromComment($comment_id, $user_id){
+        $checkVoteComment = CommentVotes::where([
+            'comment_id'=> $comment_id,
             'user_id'=> $user_id,
         ])->first();
 
-        if($checkVoteArticle === null){
+        if($checkVoteComment === null){
             return 0;
         }
         else{
-            return $checkVoteArticle->id;
+            return $checkVoteComment->id;
         }
     }
 
-    public function likeArticleInBBDD($article_id, $user_id){
-        ArticleVotes::firstOrCreate([
-            'article_id'=> $article_id,
+    public function likeCommentInBBDD($comment_id, $user_id){
+        CommentVotes::firstOrCreate([
+            'comment_id'=> $comment_id,
             'user_id'=> $user_id,
             'vote' => '1'
         ]);
-        
     }
 
-    public function dislikeArticleInBBDD($article_id, $user_id){
-        ArticleVotes::firstOrCreate([
-            'article_id'=> $article_id,
+    public function dislikeCommentInBBDD($comment_id, $user_id){
+        CommentVotes::firstOrCreate([
+            'comment_id'=> $comment_id,
             'user_id'=> $user_id,
             'vote' => '-1'
         ]);
-        
     }
 
-    public function obtainVote($article_id, $user_id){
-        $checkVoteArticle = ArticleVotes::where([
-            'article_id'=> $article_id,
+    public function obtainVoteFromComment($comment_id, $user_id){
+        $checkVoteComment = CommentVotes::where([
+            'comment_id'=> $comment_id,
             'user_id'=> $user_id,
         ])->first();
 
-        if($checkVoteArticle === null){
+        if($checkVoteComment === null){
             return '0';
         }
         else{
-            if($checkVoteArticle->vote === '1'){
+            if($checkVoteComment->vote === '1'){
                 return '1';
             }
             else{
@@ -169,14 +167,14 @@ class ArticleVotesController extends Controller
         }
     }
 
-    public function countUpvotes($article_id){
-        $upvoteCount = ArticleVotes::where('article_id', $article_id)->where('vote', '1')->count();
+    public function countUpvotes($comment_id){
+        $upvoteCount = CommentVotes::where('comment_id', $comment_id)->where('vote', '1')->count();
 
         return $upvoteCount;
     }
 
-    public function countDownvotes($article_id){
-        $downvoteCount = ArticleVotes::where('article_id', $article_id)->where('vote', '-1')->count();
+    public function countDownvotes($comment_id){
+        $downvoteCount = CommentVotes::where('comment_id', $comment_id)->where('vote', '-1')->count();
 
         return $downvoteCount;
     }

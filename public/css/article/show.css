@@ -169,6 +169,14 @@ textarea{
 	background-color: white;
 }
 
+.deleteButton{
+	padding: 10px 0px 10px;
+	width: 100%;
+	background-color: #f44336;
+	color: white;
+	border: none;
+}
+
 /*----- Comment section -----*/
 
 .comments-container{
@@ -197,15 +205,97 @@ textarea{
 	font-size: 1.75rem;
 }
 
+.button-comment-container{
+	padding-bottom: 15px;
+}
+
+.button-comment-container > button:not(.reply-comment-button){
+	padding: 2px 5px 2px;
+	background-color: var(--color-white);
+	border-radius: 5px;
+	border: 1px solid #aaa;
+}
+
+.button-comment-container > button:not(.reply-comment-button):hover{
+	background-color: #eee;
+}
+
+.form-delete-comment{
+	display: inline;
+}
+
+.form-delete-comment > button{
+	border: none;
+	background-color: var(--color-white);
+}
+
+/*----- Reply Comment section -----*/
+
+.reply-comment-button{
+	border: none;
+	background-color: var(--color-white);
+	margin: 0px 10px 0px;
+}
+
+.reply-comment-button > span{
+	font-size: 1.75rem;
+	color: var(--main-color);
+	background-color: transparent;
+}
+
+.form-reply-comment{
+	padding: 25px 0px 25px;
+}
+
+.form-reply-comment > textarea{
+	padding: 10px;
+}
+
+.form-reply-comment > button{
+	float: right;
+	margin: 15px;
+
+	padding: 5px 10px 5px;
+	width: fit-content;
+
+	border-radius: 10px;
+	border: none;
+	background: var(--main-color);
+	color: var(--color-white);
+	font-size: 1.75rem;
+}
+
+.reply-container{
+	margin: 0px 0px 0px 50px;
+	padding: 0px 0px 0px 10px;
+	border-left: 1px solid var(--main-color-dark) ;
+}
+
+.reply-container > .comment-author{
+	font-size: 2rem;
+	font-weight:400;
+	padding: 0px;
+	margin: 2px;
+}
+
+.reply-container > .comment-timestamp{
+	font-size: 1.3rem;
+}
+
+.reply-container > .comment-text{
+	font-size: 1.6rem;
+}
+
+
 /*----- Modal -----*/
 
 .modal {
-	position: fixed; /* Stay in place */
-	z-index: 1; /* Sit on top */
+	position: fixed; 
+	z-index: 1; 
 	left: 0;
 	top: 0;
-	width: 100%; /* Full width */
-	height: 100%; /* Full height */
+	width: 100%; 
+	height: 100%; 
 	background-color:rgba(192,192,192,0.5);
 
 	flex-direction: column;
@@ -218,7 +308,7 @@ textarea{
 	margin: 15% auto 15% auto;
 	border: 1px solid #888;
 	width: 30%; 
-	height: 30%;
+	height: max-content;
 }
 
 .close{

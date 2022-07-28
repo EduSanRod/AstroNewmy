@@ -12,11 +12,15 @@ use Illuminate\Support\Facades\Session;
 use Image;
 use App\Http\Controllers\Article\FavouriteArticlesController;
 use App\Http\Controllers\Article\ArticleVotesController;
+use App\Http\Controllers\Article\CommentVotesController;
 
 use App\Models\Article;
 use App\Models\Comment;
+use App\Models\CommentVotes;
 use App\Models\Equipment;
 use App\Models\ArticleEquipment;
+use App\Models\ArticleVotes;
+use App\Models\FavouriteArticles;
 
 class ArticleController extends Controller
 {
@@ -174,9 +178,34 @@ class ArticleController extends Controller
         $article->upvotes_count = $voteQuery->countUpvotes($article->article_id);
         $article->downvotes_count = $voteQuery->countDownvotes($article->article_id);
 
-        //Get the equipment and the comments from the article
-        $comments = $this->getCommentsFromArticle($articleId);
+        //Get the equipment from the article
         $equipments = $this->getEquipmentsFromArticle($articleId);
+
+        //Get the comments from the article and the reply for each comment
+        $comments = $this->getCommentsFromArticle($articleId);
+        $voteComment = new CommentVotesController();
+
+        foreach($comments as $comment){
+
+            //Check if the user has voted the comment
+            $comment->vote = $voteComment->obtainVoteFromComment($comment->comment_id, Session::get('UserId'));
+
+            //Get the number of upvotes and downvotes
+            $comment->upvotes_count = $voteComment->countUpvotes($comment->comment_id);
+            $comment->downvotes_count = $voteComment->countDownvotes($comment->comment_id);
+
+            $commentReplies = $this->getCommentsReplyFromArticle($comment->comment_id);
+            foreach($commentReplies as $reply){
+                //Check if the user has voted the comment
+                
+                $reply->vote = $voteComment->obtainVoteFromComment($reply->comment_id_reply, Session::get('UserId'));
+
+                //Get the number of upvotes and downvotes
+                $reply->upvotes_count = $voteComment->countUpvotes($reply->comment_id_reply);
+                $reply->downvotes_count = $voteComment->countDownvotes($reply->comment_id_reply);
+            }
+            $comment->replies = $commentReplies;
+        }
 
         // Attribute to check how many comments an article has
         $article->number_comments = $this->getNumberOfCommentsFrom($article->article_id);
@@ -247,6 +276,8 @@ class ArticleController extends Controller
             return redirect()->route('article.index');
         }
         
+        //Flag that checks if there is an image change
+        $imageExists = false;
 
         //Update the data from article
 
@@ -257,13 +288,18 @@ class ArticleController extends Controller
         //-------- Store image ----------//
 
         if(is_uploaded_file($_FILES['article_image']['tmp_name'])){
+            //Flag to make the image change
+            $imageExists = true;
+
             //New image has been uploaded, delete the previous image.
             unlink("imagenes/article/original/". $previousArticleData->article_image);
             unlink("imagenes/article/standarized/". $previousArticleData->article_image);
 
             //Define the image name and path /imagenes/article/<image-name>.jpg
-            $pathToSaveFileOriginal = "imagenes/article/original/". $previousArticleData->article_image;
-            $pathToSaveFileResized = "imagenes/article/standarized/". $previousArticleData->article_image;
+            $newImageSlug = $this->generateRandomString();
+            $newImageName = $newImageSlug. ".jpg";
+            $pathToSaveFileOriginal = "imagenes/article/original/". $newImageName;
+            $pathToSaveFileResized = "imagenes/article/standarized/". $newImageName;
 
             //Make a copy of the image to resize it to be 750px of width (so the image is not too large to slow down the web)
             $resizedImage = Image::make($_FILES['article_image']['tmp_name']); 
@@ -276,12 +312,13 @@ class ArticleController extends Controller
             move_uploaded_file($_FILES['article_image']['tmp_name'], $pathToSaveFileOriginal);
 
             //Store in database the path to the image
-            $articleData["article_image"] = $previousArticleData->article_image;
+            $articleData["article_image"] = $newImageName;
+            $articleData["article_slug"] = $newImageSlug;
         }
         
         //------------------//
 
-        $this->updateArticle($articleId, $articleData);
+        $this->updateArticle($articleId, $articleData, $imageExists);
 
         //To prevent keeping information that should be deleted related to article & equipment, delete all the information and re-create it
 
@@ -322,8 +359,41 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy()
+    public function destroy($articleId)
     {
+        //Check if the user is logged in and has the role of admin
+        if (!Auth::check()) {
+            return redirect()->route('article.index');
+        }
+
+        $userRole = Auth::user()->role;
+        if($userRole !== 'admin'){
+            return redirect()->route('article.index');
+        }
+
+        //Get the information from the article to be deleted
+        $articleData = $this->getArticle($articleId);
+
+        //Delete article equipment
+        $this->deleteEquipmentFromArticle($articleId);
+
+        //Delete article comments and votes
+        $this->deleteCommentsFromArticle($articleId);
+        $this->deleteCommentsVotesFromArticle($articleId);
+
+        //Delete article likes and dislikes entries
+        $this->deleteVotesFromArticle($articleId);
+
+        //Delete article from saved
+        $this->deleteArticleFromFavourites($articleId);
+
+        //Delete article 
+        $this->deleteArticle($articleId);
+
+        //Delete article image from server
+        unlink("imagenes/article/original/". $articleData->article_image);
+        unlink("imagenes/article/standarized/". $articleData->article_image);
+
         return redirect()->route('article.index');
     }
 
@@ -366,12 +436,30 @@ class ArticleController extends Controller
     public function getCommentsFromArticle($articleId)
     {
         $comments = Comment::join('users', 'comment.user_id', '=', 'users.id')
-            ->select("comment.id as comment_id", "comment.comment_text as comment_comment_text", "comment.likes as comment_likes", "comment.dislikes as comment_dislikes", "users.name as comment_author", "comment.article_id as comment_article_id", "comment.created_at as comment_created_at")
+            ->select("comment.id as comment_id", "comment.comment_text as comment_comment_text", "comment.user_id as comment_user_id", "users.name as comment_author", "comment.article_id as comment_article_id", "comment.created_at as comment_created_at")
             ->where('comment.article_id', $articleId)
+            ->where('comment.comment_id', null)
             ->orderBy('comment.created_at', 'DESC')
             ->get();
 
         return $comments;
+    }
+
+    public function getCommentsReplyFromArticle($commentId)
+    {
+        $comments = Comment::join('users', 'comment.user_id', '=', 'users.id')
+            ->select("comment.id as comment_id_reply", "comment.comment_text as comment_comment_text", "comment.user_id as comment_user_id_reply", "users.name as comment_author", "comment.article_id as comment_article_id", "comment.created_at as comment_created_at")
+            ->where('comment.comment_id', $commentId)
+            ->orderBy('comment.created_at', 'ASC')
+            ->get();
+
+            if($comments){
+                return $comments;
+            }
+            else{
+                return null;
+            }
+        
     }
 
     public function getEquipmentsFromArticle($articleId)
@@ -398,14 +486,15 @@ class ArticleController extends Controller
         ]);
     }
 
-    public function updateArticle($articleId, $articleData)
+    public function updateArticle($articleId, $articleData, $imageExists)
     {
-        if (in_array("article_image", $articleData)){
+        if ($imageExists){
             Article::where('id', $articleId)
             ->update([
                 "title" => $articleData["article_title"],
                 "description" => $articleData["article_description"],
                 "image" => $articleData["article_image"],
+                "slug" => $articleData["article_slug"],
             ]);
         }
         else{
@@ -416,6 +505,10 @@ class ArticleController extends Controller
             ]);
         }
         
+    }
+
+    public function deleteArticle($articleId){
+        Article::where('id', $articleId)->delete();
     }
 
     public function deleteEquipmentFromArticle($articleId)
@@ -431,6 +524,22 @@ class ArticleController extends Controller
         
     }
 
+    public function deleteCommentsFromArticle($articleId){
+        Comment::where('article_id', $articleId)->delete();
+    }
+
+    public function deleteCommentsVotesFromArticle($articleId){
+        CommentVotes::where('article_id', $articleId)->delete();
+    }
+
+    public function deleteVotesFromArticle($articleId){
+        ArticleVotes::where('article_id', $articleId)->delete();
+    }
+
+    public function deleteArticleFromFavourites($articleId){
+        FavouriteArticles::where('article_id', $articleId)->delete();
+    }
+
     public function createEquipment($equipmentData)
     {
 
@@ -442,7 +551,6 @@ class ArticleController extends Controller
 
     public function createArticleEquipment($data)
     {
-
         ArticleEquipment::insert([
             "article_id" => $data["article_id"],
             "equipment_id" => $data["equipment_id"],
@@ -453,4 +561,6 @@ class ArticleController extends Controller
     {
         return substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length / strlen($x)))), 1, $length);
     }
+
+    
 }

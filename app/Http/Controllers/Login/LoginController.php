@@ -53,7 +53,7 @@ class LoginController extends Controller
         $email = $request->input('email');
         $password = $request->input('password');
 
-        DB::table('users')->insert(['name' => $username, 'email' => $email, 'password' => Hash::make($password)]);
+        DB::table('users')->insert(['name' => $username, 'email' => $email, 'role' => 'user', 'password' => Hash::make($password)]);
 
         return redirect()->route('login.index');
     }

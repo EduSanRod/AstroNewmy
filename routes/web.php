@@ -7,6 +7,7 @@ use App\Http\Controllers\About\AboutController;
 use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\Article\CommentController;
+use App\Http\Controllers\Article\CommentVotesController;
 use App\Http\Controllers\Article\FavouriteArticlesController;
 use App\Http\Controllers\Article\ArticleVotesController;
 use App\Http\Controllers\Login\LoginController;
@@ -48,14 +49,21 @@ Route::get("/where-to-start", [WhereToStartController::class, 'index'])->name('w
 
 //----------- Article & Comments Routes ----------//
 Route::resource('article', ArticleController::class);
-Route::get("/create-comment/{articleId}", [CommentController::class, 'addComment'])->name('article.create-comment');
 //--- Article Favourites
 Route::post("/save-as-favourite", [FavouriteArticlesController::class, 'saveArticle'])->name('article.saved-article');
 Route::delete("/delete-from-favourite", [FavouriteArticlesController::class, 'deleteFromSavedArticle'])->name('article.delete-saved-article');
-//--- Article Favourites
+//--- Article Votes
 Route::post("/like-article", [ArticleVotesController::class, 'likeArticle'])->name('article.like-article');
 Route::post("/dislike-article", [ArticleVotesController::class, 'dislikeArticle'])->name('article.dislike-article');
 Route::delete("/remove-vote-article", [ArticleVotesController::class, 'removeVoteFromArticle'])->name('article.remove-vote-article');
+//--- Comments
+Route::get("/create-comment/{articleId}", [CommentController::class, 'addComment'])->name('article.create-comment');
+Route::get("/reply-comment/{commentId}", [CommentController::class, 'addReplyToComment'])->name('article.reply-comment');
+Route::delete("/delete-comment/{commentId}", [CommentController::class, 'deleteComment'])->name('article.delete-comment');
+//--- Comments Votes
+Route::post("/like-comment", [CommentVotesController::class, 'likeComment'])->name('article.like-comment');
+Route::post("/dislike-comment", [CommentVotesController::class, 'dislikeComment'])->name('article.dislike-comment');
+Route::delete("/remove-vote-comment", [CommentVotesController::class, 'removeVoteComment'])->name('article.remove-vote-comment');
 
 
 //----------- About Routes ----------//

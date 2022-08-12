@@ -16,7 +16,75 @@
 			<h2>Recommended Equipment</h2>
 		</button>
 		<section class="content-equipment">
-			<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus</p>
+			<h3>Astronomy With The Naked Eye</h3>
+			<p>
+				Although the first thing that comes to mind while thinking of astronomy is a telescope, it might be not be the best choice while starting this hobby.
+				Using the naked eye might not get you the same satisfaction as seeing Saturn for the first time with your telescope,
+				but being able to identify planets, stars and constellations with the naked eye could is greatly rewarding too, and it's really helpful to have this knowledge while using a telescope, so it's a win-win situation.
+			</p>
+			<h4 class="subtitle">What would I be able to see with the naked eye in the night sky?</h4>
+			<p>
+				Well, the complete list of <span class="bold">Sun</span> and <span class="bold">Moon</span>, the five planets: <span class="bold">Mercury</span>, <span class="bold">Venus</span>, <span class="bold">Mars</span>, <span class="bold">Jupiter</span> and <span class="bold">Saturn</span>, and the <span class="bold">stars</span> and the <span class="bold">constellations</span> they form.
+			</p>
+			<p>
+				<span class="bold">The easiest way to locate</span> or recognize the planets and constellations is to use some <span class="bold">smartphone app</span> that helps you with that. You will be able to find some in the "Useful Tools" section!
+			</p>
+			<p>
+				If you don't have you smartphone with you or want to try to locate them by yourself these are some <span class="bold">tips to help you know what to look for</span>:
+			</p>
+			<ul>
+				<li>
+					<p>
+						<span class="bold">· Venus:</span> Being the second most brightest object that you will find in the night sky right after the moon, and will likely appear after sunset or before sunrise. So, if you see something really bright just after sunset or before sunrise, it will most likely be Venus.
+					</p>
+				</li>
+
+				<li>
+					<p>
+						<span class="bold">· Jupiter:</span> Jupiter is the third most brightest object in the night sky. So, if you see a celestial object that really stands out in the middle of the night, it will probably be Jupiter.
+					</p>
+				</li>
+
+				<li>
+					<p>
+						<span class="bold">· Saturn:</span> Saturn is a little bit more tricky than the previous two due to not being so bright, but it is recognizable by it's yellowish color.
+					</p>
+				</li>
+
+				<li>
+					<p>
+						<span class="bold">· Mars:</span> Just like Saturn, Mars is not so bright as Venus or Jupiter, but it is easily recognizable by it's red color.
+					</p>
+				</li>
+
+				<li>
+					<p>
+						<span class="bold">· Mercury:</span> Now this is a challenge, Mercury is too dim and it's too close to the Sun that it rarely can be seen with the naked eye, being reserve for specific dates where Mercury has it's gratest separation from the Sun.
+					</p>
+				</li>
+
+				<li>
+					<p>
+						<span class="bold">· Stars & Constellations:</span> Just like recognizing planets, the easiest way is to use a smartphone app to locate them. Either way there are a lot of books or webs that help you to learn the constellations and be able to locate them in the sky. Here is one of them: <a href="https://www.constellation-guide.com/constellation-list/" target="_blank" title="Constellation guide">Constellation guide</a>.
+
+					</p>
+				</li>
+			</ul>
+
+			<hr>
+
+			<h3>Binoculars</h3>
+
+			Binoculars are a not only good tools to use while srtating, but are also useful for spotting objects in the sky to then focus the telescope on.
+
+			There are two main specs that binoculars have, their magnification and the objective lens diameter expressed in milimeters. For example a binocular with the specs 7x50 means that it has a magnification power of 7 and the diameter of the lens is 50mm.
+
+			<h4 class="subtitle">Recommended magnification</h4>
+
+			<hr>
+
+			<h3>Telescopes</h3>
+
 		</section>
 
 	</article>

@@ -1,18 +1,176 @@
-.post-container {
+:root {
+	--color-white: white;
+	--color-black: black;
+
+	--main-color: #A70CF5;
+	--main-color-light: #edc9ff;
+	--main-color-dark: #7A09B3;
+}
+
+/*---------- Astronewmy introduction ------------*/
+
+.astronewmy-container{
+	width: 90%;
+	max-width: 1050px;
+	margin: 100px auto 100px;
+}
+
+.astronewmy-container article{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-start;
+	flex-wrap: wrap;
+	gap: 50px;
+}
+
+.astronewmy-container article > * {
+	flex: 47%;
+}
+
+.astronewmy-container img{
+	width: 100%;
+	border-radius: 50px;
+}
+
+.articles-container{
+	max-width: 1050px;
+	margin: 0 auto;
+}
+
+.wheretostart-container{
+	max-width: 1050px;
+	margin: 0 auto;
+}
+
+/*---------- Astronewmy Articles ------------*/
+
+.articles-container{
+	width: 90%;
+	max-width: 1050px;
+	margin: 50px auto 50px;
+}
+
+.articles-container > h2{
+	margin-bottom: 30px;
+}
+
+.articles-container > div{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-start;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.post-container{
+	width: 45%;
+	aspect-ratio: 1/1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
+	border: 1px solid #ddd;
+	border-radius: 10px;
+
+}
+
+.post-title{
+	margin-bottom: auto;
+	padding-left: 10px;
+}
+
+.post-image{
+	margin-bottom: auto;
+}
+
+.post-image > img{
 	width: 100%;
 }
 
-.article-container {
-	max-width: 33%;
+/*---------- Astronewmy WheretoStart ------------*/
+
+.wheretostart-container{
+	width: 90%;
+	max-width: 1050px;
+	margin: 50px auto 50px;
+
+	display: flex;
+	justify-content: row;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: 10px;
 }
 
-.article-image {
-	max-width: 100%;
-	max-height: 100%;
+.wheretostart-container > div{
+	flex: 40%;
 }
 
-a,
-a:hover {
-	text-decoration: none;
-	color: black;
+.wheretostart-container img{
+	width:50%;
+	display:block;
+    margin:auto;
+}
+
+.wheretostart-container h2{
+	margin-top: 50px;
+}
+
+.wheretostart-container p{
+	margin-top: 30px;
+	
+}
+
+.button-where-to-start{
+	margin-top: 50px;
+	width: fit-content;
+	padding: 15px 20px 15px;
+	border-radius: 30px;
+	border: none;
+	background: var(--main-color);
+	color: var(--color-white);
+	font-size: 2rem;
+	font-weight: 600;
+	display: block;
+}
+
+.button-where-to-start:hover{
+	color: var(--color-white);
+}
+
+hr{
+	width: 90%;
+	max-width: 1100px;
+	margin: 0 auto;
+}
+
+p{
+	font-size: 1.75rem;
+	text-align: justify;
+}
+
+@media only screen and (max-width: 840px) {
+	.astronewmy-container{
+		margin: 10px auto 100px;
+	}
+
+	.astronewmy-container article{
+		flex-direction: column-reverse;
+	}
+	.astronewmy-container article > * {
+		flex: 100%;
+	}
+
+	.post-container{
+		width: 100%;
+	}
+
+	.wheretostart-container{
+		flex-direction: column-reverse;
+		margin: 10px auto 100px;
+	}
+	.astronewmy-container > * {
+		flex: 100%;
+	}
 }

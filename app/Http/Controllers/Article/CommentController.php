@@ -21,6 +21,10 @@ class CommentController extends Controller
             return redirect()->route('article.index');
         }
 
+        if(empty($request->input('comment_text'))){
+            return redirect()->back();
+        }
+
         date_default_timezone_set('Europe/Madrid');
         $comment_text = $request->input('comment_text');
         $user_id = Session::get('UserId');
@@ -43,6 +47,10 @@ class CommentController extends Controller
         //Check if user is logged in
         if (!Auth::check()) {
             return redirect()->route('article.index');
+        }
+
+        if(empty($request->input('reply_comment_text'))){
+            return redirect()->back();
         }
 
         //Get the information from the comment to reply to fill the parameters missing

@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Article;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use Mail;
 use Image;
+
 use App\Http\Controllers\Article\FavouriteArticlesController;
 use App\Http\Controllers\Article\ArticleVotesController;
 use App\Http\Controllers\Article\CommentVotesController;
@@ -21,6 +21,7 @@ use App\Models\Equipment;
 use App\Models\ArticleEquipment;
 use App\Models\ArticleVotes;
 use App\Models\FavouriteArticles;
+use App\Models\ArticleReport;
 
 class ArticleController extends Controller
 {
@@ -90,11 +91,20 @@ class ArticleController extends Controller
             return redirect()->route('article.index');
         }
 
+        //Check if any required parameter is missing
+        if (empty($request->input('article_title')) || empty($_FILES['article_image']['tmp_name'])) {
+            return redirect()->back();
+        }
+
         //Get all the information from the form
 
         $articleData = array();
         $articleData["article_title"] = $request->input('article_title');
-        $articleData["article_description"] = $request->input('article_description');
+        if(empty($request->input('article_description'))){
+            $articleData["article_description"] = $request->input('article_title');
+        }else{
+            $articleData["article_description"] = $request->input('article_description');
+        }
         $articleData["article_user_id"] = Session::get('UserId');
         $articleData["article_slug"] = $this->generateRandomString();
 
@@ -267,6 +277,10 @@ class ArticleController extends Controller
         if (!Auth::check()) {
             return redirect()->route('article.index');
         }
+
+        if (empty($request->input('article_title'))) {
+            return redirect()->back();
+        }
         
         $previousArticleData = $this->getArticle($articleId);
         $userId = Auth::id();
@@ -283,7 +297,11 @@ class ArticleController extends Controller
 
         $articleData = array();
         $articleData["article_title"] = $request->input('article_title');
-        $articleData["article_description"] = $request->input('article_description');
+        if(empty($request->input('article_description'))){
+            $articleData["article_description"] = $request->input('article_title');
+        }else{
+            $articleData["article_description"] = $request->input('article_description');
+        }
 
         //-------- Store image ----------//
 
@@ -397,13 +415,45 @@ class ArticleController extends Controller
         return redirect()->route('article.index');
     }
 
+    public function reportArticle($articleId){
+        //Check if the user is logued in
+        if (!Auth::check()) {
+            return redirect()->route('article.index');
+        }
+
+        //Register the person who reported and the reported article. Do not insert if the user report multiple times
+        $report = ArticleReport::firstOrCreate(
+            ['user_id' =>  Session::get('UserId')],
+            ['article_id' => $articleId]
+        );
+        //Add one to the report field in article table if the report has been created.
+        if ($report->wasRecentlyCreated === true) {
+            Article::where('id', $articleId)
+            ->increment('report', 1);
+        } 
+
+        //Check if the article should be banned. (There needs to be more than 10 reports and +20% of the number of likes.)
+        $article = $this->getArticle($articleId);
+        $numberOfReports = $article->article_report;
+
+        $votesQuery = new ArticleVotesController();
+        $numberOfLikes = $votesQuery->countUpvotes($articleId);
+
+        if($numberOfReports > 10 && $numberOfReports/$numberOfLikes > 0.2){
+            $this->banArticle($articleId);
+        }
+
+        return redirect()->route('article.index');
+    }
+
     //------------ Query Functions ------------//
 
     public function getAllArticles()
     {
         $celestialObjects = Article::select("article.id as article_id", "article.title as article_title", "article.slug as article_slug", "article.description as article_description", "article.image as article_image", "article.user_id as article_user_id", "article.source as article_source", "article.celestial_object_id  as article_celestial_object_id")
-            ->orderBy('id', 'DESC')
-            ->get();
+        ->where('banned', 0)
+        ->orderBy('id', 'DESC')
+        ->get();
 
         return $celestialObjects;
     }
@@ -426,7 +476,7 @@ class ArticleController extends Controller
 
     public function getArticle($articleId)
     {
-        $celestialObject = Article::select("article.id as article_id", "article.title as article_title", "article.slug as article_slug", "article.description as article_description", "article.image as article_image", "article.user_id as article_user_id", "article.source as article_source", "article.celestial_object_id as article_celestial_object_id")
+        $celestialObject = Article::select("article.id as article_id", "article.title as article_title", "article.slug as article_slug", "article.description as article_description", "article.image as article_image", "article.user_id as article_user_id", "article.source as article_source", "article.celestial_object_id as article_celestial_object_id", "article.report as article_report")
             ->where('article.id', $articleId)
             ->first();
 
@@ -555,6 +605,24 @@ class ArticleController extends Controller
             "article_id" => $data["article_id"],
             "equipment_id" => $data["equipment_id"],
         ]);
+    }
+
+    public function banArticle($articleId){
+        Article::where('id', $articleId)
+        ->update(['banned' => 1]);
+
+        $data = array(
+            'article'=> $articleId,
+            'comment'=> 'Select * from article where id = '. $articleId. ";",
+        );
+   
+        Mail::send(['text'=>'reported-mail'], $data, function($message) {
+            $message
+            ->to('astronewmy@gmail.com', 'Reciber')
+            ->subject("Banned Article");
+
+            $message->from('astronewmymailer@gmail.com','AstroNewmy Emailer');
+        });
     }
 
     public function generateRandomString($length = 16)

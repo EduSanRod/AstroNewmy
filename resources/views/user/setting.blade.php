@@ -46,7 +46,7 @@
 		<input type="submit" class="submit-button" value="Save changes">
 	</form>
 
-	<a href="{{ route('user.delete') }}" class="delete-button" title="Delete account">Delete account</a>
+	<button onclick="deleteAccount()" class="delete-button">Delete account</button>
 
 </div>
 
@@ -60,6 +60,15 @@
 		} else {
 			document.getElementById('message').style.color = 'red';
 			document.getElementById('message').innerHTML = 'not matching';
+		}
+	}
+</script>
+
+<script>
+	function deleteAccount(){
+		let confirmation = "Are you sure you want to delete your account?";
+		if (confirm(confirmation) == true) {
+			window.location.href = "{{ route('user.delete') }}";
 		}
 	}
 </script>

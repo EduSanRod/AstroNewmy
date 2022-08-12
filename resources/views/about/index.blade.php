@@ -12,15 +12,29 @@
 
 <section id="content">
 	<article id="information">
-		<h2>Title Example</h1>
-			<p>
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dictum, risus sit amet aliquam ultrices, neque arcu feugiat urna, sed sollicitudin urna nunc ac tellus. Cras blandit justo sed eleifend mattis. Quisque ac convallis ipsum. Praesent accumsan euismod mi quis vulputate.
-			</p>
+		<div>
+			<p>The main goal of this Astronewmy is to help people to get into the hobby of astronomy, 
+			and let them share their journey with other people.</p>
 
-			<h3>Subtitle Example</h1>
-				<p>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dictum, risus sit amet aliquam ultrices, neque arcu feugiat urna, sed sollicitudin urna nunc ac tellus. Cras blandit justo sed eleifend mattis. Quisque ac convallis ipsum. Praesent accumsan euismod mi quis vulputate.
-				</p>
+			<p>For new little astronomers there are recommendations for beginner equipments and a handfull of useful 
+			apps that are chosen due to be as light on the pocket as possible. </p>
+
+			<p>And veterans of the astronomy would be able to share their photographs with other people with the possibility 
+			of sharing the equipment used for that particular photo aswell.</p>
+		</div>
+		
+		<div>
+			<h2>About me</h2>
+			<p>Heya! My name is Eduardo, a junior developer from Spain with a passion for web development and, of course, astronomy.</p>
+
+			<p>Being this my first web development project I would like to hear from you if there is some 
+			functionality that you feel it's missing, or some ideas that you would like to be introduce.</p>
+			
+			<p>For this you could use either the Contact us form, or the email <a href="mailto:AstroNewmy@gmail.com">AstroNewmy@gmail.com</a>. </p>
+			
+			<p>Thank you in advance!</p>
+		</div>
+		
 	</article>
 
 	<article id="contact-us-form">

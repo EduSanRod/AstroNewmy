@@ -75,7 +75,7 @@
 					@if( Auth::user()->id == $article->article_user_id)
 					<a href="{{ route('article.edit', ['article'=>$article->article_id]) }}">Update Article</a>
 					@endif
-					<a href="{{ route('user.setting') }}">Report</a>
+					<a href="{{ route('article.report-article', ['articleId'=>$article->article_id]) }}">Report</a>
 					@if( Auth::user()->role == 'admin')
 					<form action="{{ route('article.destroy', ['article' => $article->article_id]) }}" method="POST">
 						@csrf

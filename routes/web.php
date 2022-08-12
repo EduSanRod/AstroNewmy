@@ -30,7 +30,7 @@ Route::get("/login", [LoginController::class, 'displayLogin'])->name('login.inde
 Route::post('/login-auth', [AuthController::class, 'authenticate'])->name('login.authenticate');
 Route::get('/login-out', [LoginController::class, 'logout'])->name('login.logout');
 Route::get('/register', [LoginController::class, 'createLoginForm'])->name('login.create-form');
-Route::post('/login-create', [LoginController::class, 'createLogin'])->name('login.create');
+Route::match(array('GET','POST'),'/login-create', [LoginController::class, 'createLogin'])->name('login.create');
 
 //----------- User Routes ----------//
 Route::get('/user/settings', [LoginController::class, 'showUserSetting'])->name('user.setting');
@@ -49,6 +49,7 @@ Route::get("/where-to-start", [WhereToStartController::class, 'index'])->name('w
 
 //----------- Article & Comments Routes ----------//
 Route::resource('article', ArticleController::class);
+Route::get("/article-report/{articleId}", [ArticleController::class, 'reportArticle'])->name('article.report-article');
 //--- Article Favourites
 Route::post("/save-as-favourite", [FavouriteArticlesController::class, 'saveArticle'])->name('article.saved-article');
 Route::delete("/delete-from-favourite", [FavouriteArticlesController::class, 'deleteFromSavedArticle'])->name('article.delete-saved-article');

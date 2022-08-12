@@ -42,18 +42,48 @@ class LoginController extends Controller
 
     public function createLoginForm()
     {
-
         return view("login/create");
     }
 
     public function createLogin(Request $request)
     {
+        
+        if (empty($request->input('username')) || empty($request->input('email')) || empty($request->input('password'))) {
+            $message = "A field from the register form was empty";
+            return view("login/create", ['message' => $message]);
+        }
 
         $username = $request->input('username');
         $email = $request->input('email');
         $password = $request->input('password');
 
-        DB::table('users')->insert(['name' => $username, 'email' => $email, 'role' => 'user', 'password' => Hash::make($password)]);
+        $userAlreadyExists = False;
+        $message = "";
+
+        //Check if there is a user with the same username
+        $userCheckUsername = User::where('name', $username)->first();
+        if($userCheckUsername){
+            $userAlreadyExists = True;
+            $message = $message. "-The Username is already on use." ;
+        }
+
+        //Check if there is a user with the same email
+        $userCheckEmail = User::where('email', $email)->first();
+        if($userCheckEmail){
+            $userAlreadyExists = True;
+            $message = $message. "-The Email is already on use, try Login in" ;
+        }
+
+        if($userAlreadyExists == True){
+            return view("login/create", ['message' => $message]);
+        }else{
+            //The username and email is not used, create the user
+            User::create([
+                'name' => $username,
+                'email' => $email,
+                'password' => $password,
+            ]);
+        }
 
         return redirect()->route('login.index');
     }

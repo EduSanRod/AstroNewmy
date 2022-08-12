@@ -45,12 +45,19 @@
 	</section>
 
 	<footer>
-		<ul>
-			<li><a href="{{ route('home.display') }}" title="Home">Home</a></li>
-			<li><a href="{{ route('wheretostart.index') }}" title="Where to Start">Where to Start</a></li>
-			<li><a href="{{ route('article.index') }}" title="Articles">Articles</a></li>
-			<li><a href="{{ route('about.display') }}" title="About">About</a></li>
-		</ul>
+		<div>
+			<ul>
+				<li><a href="{{ route('home.display') }}" title="Home">Home</a></li>
+				<li><a href="{{ route('wheretostart.index') }}" title="Where to Start">Where to Start</a></li>
+				<li><a href="{{ route('article.index') }}" title="Articles">Articles</a></li>
+				<li><a href="{{ route('about.display') }}" title="About">About</a></li>
+			</ul>
+			<div>
+				<p>CONTACT US</p>
+				<a href="mailto:AstroNewmy@gmail.com">AstroNewmy@gmail.com</a>
+			</div>
+		</div>
+		
 		<p>© 2022 AstroNewmy</p>
 	</footer>
 

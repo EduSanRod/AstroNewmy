@@ -24,7 +24,7 @@ class AboutController extends Controller
    
         Mail::send(['text'=>'mail'], $data, function($message) {
             $message
-            ->to('edusanchez4bc@gmail.com', 'Reciber')
+            ->to('astronewmy@gmail.com', 'Reciber')
             ->subject("Contact Us Email");
 
             $message->from('astronewmymailer@gmail.com','AstroNewmy Emailer');

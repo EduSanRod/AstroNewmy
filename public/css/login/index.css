@@ -11,8 +11,9 @@
 
 #main-section{
 	display: flex;
-	align-items: start;
-    justify-content: center;
+	flex-direction: column;
+	align-items: center;
+    justify-content: flex-start;
 }
 
 .form-container{
@@ -86,4 +87,22 @@ label{
 	color: var(--main-color);
 	font-size: 2rem;
 	
+}
+
+/* ----- Alert message ----- */
+
+.alert{
+	width: 50%;
+}
+
+@media only screen and (max-width: 840px) {
+
+	.form-container{
+		width: 90%;
+		margin-top: 5px;
+	}z
+
+	.alert{
+		width: 90%;
+	}
 }

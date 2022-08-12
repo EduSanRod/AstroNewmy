@@ -10,8 +10,13 @@
 
 @section('section')
 
-<div id="alertMessage" role="alert" class="alert">
+@isset($message)
+<div class="alert alert-danger" role="alert">
+	{{ $message }}
+</div>
+@endisset
 
+<div id="alertMessage" role="alert" class="alert">
 </div>
 
 <div class="form-container">
@@ -23,7 +28,7 @@
 
 
 		<!-- Email input -->
-		<label for="form2Example1">Email address</label>
+		<label for="email">Email address</label>
 		<input type="email" id="email" name="email" class="form-input"/>
 
 
@@ -92,6 +97,7 @@
 		if (!formStatus) {
 			document.getElementById('alertMessage').innerHTML = alertMessage;
 			document.getElementById('alertMessage').classList.add("alert-danger");
+			document.getElementById('alertMessage').style.display = "block";
 
 		}
 

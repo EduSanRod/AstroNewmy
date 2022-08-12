@@ -11,8 +11,34 @@
 
 #information{
 	flex: 50%;
-	padding: 20px 50px 20px;
+	padding: 20px 100px 20px;
 }
+
+#information > div{
+	padding: 50px 0px 0px;
+}
+
+#information p{
+	font-size: 1.8rem;
+	text-align: justify;
+	padding-bottom: 10px;
+}
+
+#information > div:first-child > p:first-child {
+	font-size: 2.3rem;
+	padding: 0px 0px 20px;
+	text-align: center;
+}
+
+#information h2 {
+	padding-bottom: 20px;
+}
+
+#information > div:nth-child(2) > p:last-child {
+	font-size: 2rem;
+	font-weight: 600;
+}
+
 
 /* ----- form container ----- */
 
@@ -74,8 +100,13 @@ label{
 @media only screen and (max-width: 840px) {
 	#information{
 		flex: 100%;
+		padding: 0px 40px 20px;
 	}
 	#contact-us-form{
 		flex: 100%;
+	}
+
+	.form > *{
+		width: 100%;
 	}
 }

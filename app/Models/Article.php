@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $user_id
  * @property string $source
  * @property int $celestial_object_id
+ * @property int $report
+ * @property boolean $banned
  */
 class Article extends Model
 {
@@ -27,6 +29,6 @@ class Article extends Model
     /**
      * @var array
      */
-    protected $fillable = ['title', 'slug', 'description', 'image', 'user_id', 'source', 'celestial_object_id'];
+    protected $fillable = ['title', 'slug', 'description', 'image', 'user_id', 'source', 'celestial_object_id', 'report', 'banned'];
 
 }
